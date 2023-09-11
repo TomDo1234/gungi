@@ -1,24 +1,6 @@
 export type Piece = { id: number, amount: number; levels: number; display_name: string; note?: string,color?: 'white' | 'black' };
 
-export type BoardPiece = {
-    color: 'white' | 'black';
-    piece_type:
-        | 'marshal(king)'
-        | 'knight'
-        | 'pawn'
-        | 'general'
-        | 'spy'
-        | 'archer'
-        | 'cannon'
-        | 'samurai'
-        | 'musketeer'
-        | 'lieutenantgeneral'
-        | 'majorgeneral'
-        | 'captain'
-        | 'fortress'
-};
-
-export type BoardSquare = { id: number; pieces: Array<BoardPiece> }
+export type BoardSquare = { id: number; pieces: Array<Piece> }
 
 export const piece_data: Piece[] = [
     { id: 1, amount: 4, levels: 3, display_name: 'Major General' },

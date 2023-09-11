@@ -1,31 +1,10 @@
 import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action-gungi";
-import type { BoardPiece, BoardSquare, Piece } from "./pieces";
+import type { Piece } from "./pieces";
 
 type PlayerData = {
     name: string;
     color: string;
     piece_data: Piece[];
-}
-
-export function handleGameMove(e: CustomEvent, board_state: BoardSquare[]): { id: number; pieces: BoardPiece[] }[] {
-    const { items, info } = e.detail;
-    const index = items.findIndex((item: BoardSquare | Piece) => {
-        if ("pieces" in item) { //Checking if it is BoardSquare and not Piece
-            return false
-        }
-        return info.id === item.id
-    });
-
-    if (index === -1) {
-        return board_state
-    }
-
-    const piece_data: Piece = items[index];
-    board_state[index].pieces.unshift({
-        color: piece_data.color ?? 'black',
-        piece_type: piece_data.display_name?.toLowerCase()?.replaceAll(' ', '') as BoardPiece['piece_type']
-    })
-    return board_state
 }
 
 let shouldIgnoreDndEvents = false;

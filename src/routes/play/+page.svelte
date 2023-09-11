@@ -4,32 +4,9 @@
 	<div
 		class="flex flex-col laptop:flex-row gap-y-5 gap-x-6 laptop:gap-x-12 w-full justify-around items-center px-3 tablet:px-8 laptop:px-12"
 	>
-		<div
-			class="grid grid-cols-9 h-fit w-full tablet:w-[unset]"
-			use:dndzone={{ items: board_state, dragDisabled: true, dropTargetClasses: ['!outline-none'] }}
-			on:finalize={(e) => (board_state = handleGameMove(e, board_state))}
-		>
+		<div class="grid grid-cols-9 h-fit w-full tablet:w-[unset]">
 			{#each board_state as square, i}
-				{@const top_piece = square.pieces?.[0]}
-				<div
-					class="bg-[#eecaa0] border-[#bc7e38] border-t tablet:border-t-2 border-r p-1.5 tablet:border-r-2 border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square
-					{i % 9 === 0 && 'border-l tablet:border-l-2'} {i >= 72 && 'border-b tablet:border-b-2'}"
-				>
-					{#if top_piece}
-						<img
-							class="block"
-							draggable="true"
-							src="/img/{top_piece?.color}-{top_piece?.piece_type}-1.svg"
-							alt="{top_piece?.color}-{top_piece?.piece_type}-1"
-						/>
-						<div
-							class:hidden={square.pieces.length === 0}
-							class="rounded-full number_img h-7 bg-blue-950 aspect-square flex justify-center items-center absolute -top-3 -right-3"
-						>
-							{square.pieces.length}
-						</div>
-					{/if}
-				</div>
+				<Square { i } />
 			{/each}
 		</div>
 		<div class="flex flex-col gap-y-6">
@@ -79,7 +56,8 @@
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action-gungi';
 	import { piece_data, type BoardSquare, type Piece } from '$lib/pieces';
-	import { handleGameMove, handleStockpileDnDConsider } from '$lib/game';
+	import { handleStockpileDnDConsider } from '$lib/game';
+	import Square from '$lib/components/Square.svelte';
 
 	let board_state: BoardSquare[] = Array.from({ length: 81 }, (_, i) => {
 		return { id: i, pieces: [] };
@@ -89,12 +67,18 @@
 		{
 			name: 'Player 1',
 			color: 'white',
-			piece_data: structuredClone(piece_data).map((piece: Piece) => {piece.color = 'white'; return piece})
+			piece_data: structuredClone(piece_data).map((piece: Piece) => {
+				piece.color = 'white';
+				return piece;
+			})
 		},
 		{
 			name: 'Player 2',
 			color: 'black',
-			piece_data: structuredClone(piece_data).map((piece: Piece) => {piece.color = 'black'; return piece})
+			piece_data: structuredClone(piece_data).map((piece: Piece) => {
+				piece.color = 'black';
+				return piece;
+			})
 		}
 	];
 </script>
