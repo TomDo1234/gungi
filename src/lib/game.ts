@@ -1,7 +1,7 @@
 import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action-gungi";
 import type { Piece } from "./pieces";
 
-type PlayerData = {
+export type PlayerData = {
     name: string;
     color: string;
     piece_data: Piece[];
