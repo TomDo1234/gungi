@@ -7,8 +7,8 @@ type PlayerData = {
     piece_data: Piece[];
 }
 
-export function handleGameMove(e: CustomEvent,board_state: BoardSquare[]): { id: number; pieces: BoardPiece[] }[] {
-    const { items,info } = e.detail;
+export function handleGameMove(e: CustomEvent, board_state: BoardSquare[]): { id: number; pieces: BoardPiece[] }[] {
+    const { items, info } = e.detail;
     const index = items.findIndex((item: BoardSquare | Piece) => {
         if ("pieces" in item) { //Checking if it is BoardSquare and not Piece
             return false
@@ -21,12 +21,15 @@ export function handleGameMove(e: CustomEvent,board_state: BoardSquare[]): { id:
     }
 
     const piece_data: Piece = items[index];
-    board_state[index].pieces.unshift({ color: 'white', piece_type: piece_data.display_name?.toLowerCase()?.replaceAll(' ','') as BoardPiece['piece_type'] })
+    board_state[index].pieces.unshift({
+        color: piece_data.color ?? 'black',
+        piece_type: piece_data.display_name?.toLowerCase()?.replaceAll(' ', '') as BoardPiece['piece_type']
+    })
     return board_state
 }
 
 let shouldIgnoreDndEvents = false;
-export function handleStockpileDnDConsider(e: CustomEvent,player_data: PlayerData): PlayerData {
+export function handleStockpileDnDConsider(e: CustomEvent, player_data: PlayerData): PlayerData {
     const { trigger, id } = e.detail.info;
     const items = player_data.piece_data;
     if (trigger === TRIGGERS.DRAG_STARTED) {

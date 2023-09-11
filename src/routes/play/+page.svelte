@@ -47,7 +47,7 @@
 					<div
 						class="grid grid-cols-3 tablet:grid-cols-7 laptop:grid-cols-6 desktop:grid-cols-8 gap-4"
 						use:dndzone={{
-							items: Object.values(player.piece_data),
+							items: player.piece_data,
 							dropFromOthersDisabled: true,
 							dropTargetClasses: ['!outline-none']
 						}}
@@ -78,7 +78,7 @@
 
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action-gungi';
-	import { piece_data, type BoardSquare } from '$lib/pieces';
+	import { piece_data, type BoardSquare, type Piece } from '$lib/pieces';
 	import { handleGameMove, handleStockpileDnDConsider } from '$lib/game';
 
 	let board_state: BoardSquare[] = Array.from({ length: 81 }, (_, i) => {
@@ -89,12 +89,12 @@
 		{
 			name: 'Player 1',
 			color: 'white',
-			piece_data: structuredClone(piece_data)
+			piece_data: structuredClone(piece_data).map((piece: Piece) => {piece.color = 'white'; return piece})
 		},
 		{
 			name: 'Player 2',
 			color: 'black',
-			piece_data: structuredClone(piece_data)
+			piece_data: structuredClone(piece_data).map((piece: Piece) => {piece.color = 'black'; return piece})
 		}
 	];
 </script>
