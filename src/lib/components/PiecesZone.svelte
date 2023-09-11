@@ -15,7 +15,7 @@
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none']
 				}}
-				on:consider={(e) => (player_data[i] = handleStockpileDnDConsider(e, player_data[i]))}
+				on:consider={(e) => (player_data[i].piece_data = handleStockpileDnDConsider(e, player_data[i].piece_data))}
 			>
 				{#each player.piece_data as piece (piece.id)}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}

@@ -9,7 +9,7 @@
 		{/each}
 	</div>
 
-	<div class="rack" use:dndzone={options} on:consider={handleDnd} on:finalize={handleDnd}>
+	<div class="rack" use:dndzone={options} on:consider={(e) => items = handleStockpileDnDConsider(e,items)} on:finalize={handleDnd}>
 		{#each items as item (item.id)}
 			<div>
 				<Tile letter={item.letter} />
@@ -23,6 +23,7 @@
 
 	import Tile from './Tile.svelte';
 	import Square from './Square.svelte';
+	import { handleStockpileDnDConsider } from '$lib/game';
 
 	let idx = 0;
 
