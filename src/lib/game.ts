@@ -1,4 +1,4 @@
-import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action";
+import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action-gungi";
 import type { BoardPiece, BoardSquare, Piece } from "./pieces";
 
 type PlayerData = {

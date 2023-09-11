@@ -77,7 +77,7 @@
 </main>
 
 <script lang="ts">
-	import { dndzone } from 'svelte-dnd-action';
+	import { dndzone } from 'svelte-dnd-action-gungi';
 	import { piece_data, type BoardSquare } from '$lib/pieces';
 	import { handleGameMove, handleStockpileDnDConsider } from '$lib/game';
 
