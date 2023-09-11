@@ -1,7 +1,7 @@
 <div
 	class="bg-[#eecaa0] border-[#bc7e38] border-t tablet:border-t-2 border-r p-1.5 tablet:border-r-2 border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square
 					{i % 9 === 0 && 'border-l tablet:border-l-2'} {i >= 72 && 'border-b tablet:border-b-2'}"
-	use:dndzone={{ items }}
+	use:dndzone={options}
 	on:consider={(e) => (items = e.detail.items)}
 	on:finalize={(e) => (items = e.detail.items)}
 >
@@ -29,6 +29,11 @@
 
 	// export let square: BoardSquare;
 	export let i: number; //Square number
-
+    
 	let items: Piece[] = [];
+
+    $: options = {
+        items,
+        dropFromOthersDisabled: items.length >= 3
+    }
 </script>
