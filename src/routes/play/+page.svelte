@@ -7,7 +7,8 @@
 		<div class="grid grid-cols-9 h-fit w-full tablet:w-[unset]">
 			{#each board_state as row,i}
 				{#each row as _, j}
-					<Square square_number={9*i + j} square_is_valid_move={true} on:tower_details={showTowerDetails} on:mouseleave={clearTowerDetails}  />
+					{@const square_number = 9 * i + j}
+					<Square {square_number} square_is_valid_move={true} on:tower_details={showTowerDetails} on:mouseleave={clearTowerDetails}  />
 				{/each}
 			{/each}
 		</div>
@@ -19,6 +20,7 @@
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
 	import type { Piece } from '$lib/pieces';
+	import { availableMoves } from '$lib/game';
 
 	let board_state: {id: number}[][] = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j }))
@@ -31,6 +33,8 @@
 	function clearTowerDetails() {
 		currently_hovered_tower_details = [];
 	}
+
+	$: available_moves = availableMoves(currently_hovered_tower_details.at(-1));
 </script>
 
 <style lang="postcss">

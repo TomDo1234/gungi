@@ -29,3 +29,7 @@ export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[]
 
     return items
 }
+
+export function availableMoves(piece: Piece | undefined,board_state: {id: number}[][]) {
+    return piece
+}
