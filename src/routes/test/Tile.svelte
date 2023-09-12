@@ -1,4 +1,4 @@
-<div class="square" class:!hidden={hidden} >
+<div class="square h-full" class:!hidden={hidden} >
 	<div class="letter no-select">
 		{letter.toUpperCase()}
 	</div>
@@ -11,8 +11,6 @@
 
 <style>
 	.square {
-		height: calc(min(5vmin, 50px));
-		width: calc(min(5vmin, 50px));
 		border-radius: calc(min(5vmin, 50px) / 6.25);
 		display: flex;
 		align-items: center;

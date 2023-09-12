@@ -1,9 +1,9 @@
 <div class="game-container">
 	<div class="grid">
 		{#each boardGrid as col, i}
-			<div class="col">
+			<div class="row">
 				{#each col as _, j}
-					<Square {i} />
+					<Square square_number={9 * i + j} />
 				{/each}
 			</div>
 		{/each}
@@ -21,7 +21,7 @@
 			</div>
 		{/each}
 	</div>
-	<PiecesZone />
+	<PiecesZone tower_details={[]} />
 </div>
 
 <script lang="ts">
@@ -163,12 +163,11 @@
 
 	.grid {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		justify-content: center;
 	}
-	.col {
+	.row {
 		display: flex;
-		flex-direction: column;
 	}
 
 	.rack {
