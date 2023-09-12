@@ -6,28 +6,30 @@
 		: ''}
 	use:dndzone={options}
 	on:consider={handleDnd}
-	on:finalize={handleDndFinalize}
+	on:finalize={handleDnd}
 >
 	{#each items as tile, i (tile.id)}
-		<Tile letter={tile.display_name} hidden={i > 0 && finalized} />
+		<Tile letter={tile.display_name} hidden={i > 0} />
 	{/each}
 </div>
 
 <script lang="ts">
-	import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME } from 'svelte-dnd-action-gungi';
+	import { dndzone, SHADOW_ITEM_MARKER_PROPERTY_NAME, type DndEventInfo } from 'svelte-dnd-action-gungi';
 
 	import Tile from './Tile.svelte';
 	let items: Item[] = [];
 	export let i: number;
-	let finalized = false;
 	function handleDnd(e: CustomEvent) {
-		finalized = false;
-		items = e.detail.items;
-	}
+		const { items: detailItems }: {items: Item[],info: DndEventInfo } = e.detail;
+		const dragged_item_index = detailItems.findIndex(item => item.id === 'id:dnd-shadow-placeholder-0000' )
 
-	function handleDndFinalize(e: CustomEvent) {
-		items = e.detail.items;
-		finalized = true;
+		if (dragged_item_index !== -1) {
+			const moved_item = detailItems.splice(dragged_item_index,1)[0];
+			detailItems.unshift(moved_item)
+		}
+
+		items = detailItems;
+		console.log(items,detailItems,dragged_item_index)
 	}
 
 	$: options = {
