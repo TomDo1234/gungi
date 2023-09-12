@@ -1,4 +1,4 @@
-<div class="relative" class:hidden={hidden} >
+<div class="relative !visible" class:hidden={hidden} >
     <img
         class="block"
         src="/img/{piece?.color}-{name_slug}-1.svg"
