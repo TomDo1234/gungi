@@ -2,6 +2,20 @@
 	<h2 class="font-bold text-4xl">Game Phase</h2>
 	<div class="flex flex-col justify-between rounded-3xl bg-lime-950 text-white py-5 px-8">
 		<h4>Tower details</h4>
+		<div class="flex flex-wrap justify-around">
+			{#each { length: 3 } as _,i}
+				{@const piece = tower_details[i]}
+				{@const piece_slug_name = piece?.display_name?.toLowerCase()?.replaceAll(' ', '')}
+				<div class="flex flex-col gap-y-2 mt-2" class:invisible={!piece} >
+					<h5 class="text-center font-medium" >Tier {tower_details.length - i}</h5>
+					<img
+						class="block aspect-square h-14"
+						src="/img/{piece?.color}-{piece_slug_name}-1.svg"
+						alt="{piece?.color}-{piece_slug_name}-1"
+					/>
+				</div>
+			{/each}
+		</div>
 	</div>
 	{#each player_data as player, i}
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
@@ -15,11 +29,14 @@
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none']
 				}}
-				on:consider={(e) => handleConsider(e,i)}
+				on:consider={(e) => handleConsider(e, i)}
 			>
 				{#each player.piece_data as piece (piece.id)}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
-					<div class="h-12 laptop:h-14 aspect-square cursor-pointer relative" class:hidden={piece.amount <= 0} >
+					<div
+						class="h-12 laptop:h-14 aspect-square cursor-pointer relative"
+						class:hidden={piece.amount <= 0}
+					>
 						<img
 							class="block"
 							draggable="true"
@@ -43,6 +60,8 @@
 	import { handleStockpileDnDConsider } from '$lib/game';
 	import { piece_data, type Piece } from '$lib/pieces';
 
+	export let tower_details: Piece[];
+
 	const player_data = [
 		{
 			name: 'Player 1',
@@ -62,7 +81,7 @@
 		}
 	];
 
-	function handleConsider(e: CustomEvent,player_number: number) {
+	function handleConsider(e: CustomEvent, player_number: number) {
 		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);
 		const { items: detailItems, info }: { items: Item[]; info: DndEventInfo } = e.detail;
 		const dragged_item_index = detailItems.findIndex(
@@ -70,11 +89,13 @@
 		);
 
 		if (dragged_item_index !== -1 && info.trigger === TRIGGERS.DRAGGED_ENTERED) {
-			const update_index = updated_player_data.findIndex(item => item?.display_name === detailItems[dragged_item_index]?.display_name);
+			const update_index = updated_player_data.findIndex(
+				(item) => item?.display_name === detailItems[dragged_item_index]?.display_name
+			);
 			updated_player_data[update_index].amount -= 1;
 		}
 
-		player_data[player_number].piece_data = updated_player_data
+		player_data[player_number].piece_data = updated_player_data;
 	}
 </script>
 

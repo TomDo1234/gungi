@@ -7,21 +7,27 @@
 		<div class="grid grid-cols-9 h-fit w-full tablet:w-[unset]">
 			{#each board_state as row,i}
 				{#each row as _, j}
-					<Square square_number={9*i + j} square_is_valid_move={true} />
+					<Square square_number={9*i + j} square_is_valid_move={true} on:tower_details={showTowerDetails}  />
 				{/each}
 			{/each}
 		</div>
-		<PiecesZone />
+		<PiecesZone tower_details={currently_hovered_tower_details} />
 	</div>
 </main>
 
 <script lang="ts">
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
+	import type { Piece } from '$lib/pieces';
 
 	let board_state: {id: number}[][] = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j }))
 	);
+
+	let currently_hovered_tower_details: Piece[] = [];
+	function showTowerDetails(e: CustomEvent) {
+		currently_hovered_tower_details = e.detail.items
+	}
 </script>
 
 <style lang="postcss">

@@ -7,7 +7,13 @@
 	on:finalize={handleDnd}
 >
 	{#each items as piece, i}
-		<Tile {piece} stack_length={items.length} hidden={i > 0} />
+		<Tile
+			on:mouseover={emitStackInfo}
+			on:focus={emitStackInfo}
+			{piece}
+			stack_length={items.length}
+			hidden={i > 0}
+		/>
 	{/each}
 </div>
 
@@ -15,12 +21,18 @@
 	import { dndzone, type DndEventInfo } from 'svelte-dnd-action-gungi';
 	import type { Piece } from '$lib/pieces';
 	import Tile from '$lib/components/Tile.svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	// export let square: BoardSquare;
 	export let square_number: number; //Square number
 	export let square_is_valid_move = false;
 
 	let items: Piece[] = [];
+	const dispatch = createEventDispatcher();
+
+	function emitStackInfo() {
+		dispatch('tower_details', { items });
+	}
 
 	function handleDnd(e: CustomEvent) {
 		const { items: detailItems }: { items: Item[]; info: DndEventInfo } = e.detail;
