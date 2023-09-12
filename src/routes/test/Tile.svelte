@@ -1,4 +1,4 @@
-<div class="square">
+<div class="square" class:!hidden={hidden} >
 	<div class="letter no-select">
 		{letter.toUpperCase()}
 	</div>
@@ -6,6 +6,7 @@
 
 <script lang="ts" >
 	export let letter: string;
+	export let hidden = false;
 </script>
 
 <style>
