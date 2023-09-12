@@ -18,5 +18,5 @@
     export let piece: Piece;
     export let stack_length: number;
     export let hidden = false;
-    $: name_slug = piece.display_name.replaceAll(' ', '').toLowerCase()
+    $: name_slug = piece?.display_name?.replaceAll(' ', '')?.toLowerCase()
 </script>

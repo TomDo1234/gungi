@@ -7,7 +7,7 @@
 	role="application"
 	on:mouseleave
 >
-	{#each items as piece, i (`${piece.id}${i}`)}
+	{#each items as piece, i (`${piece?.id}${i}`)}
 		<Tile
 			on:mouseover={emitStackInfo}
 			on:focus={emitStackInfo}
@@ -42,10 +42,9 @@
 	function handleDnd(e: CustomEvent) {
 		const { items: detailItems, info }: { items: Piece[]; info: DndEventInfo } = e.detail;
 		const dragged_item_index = detailItems.findIndex(
-			(item) => item.id === 'id:dnd-shadow-placeholder-0000'
+			(item) => item?.id === 'id:dnd-shadow-placeholder-0000'
 		);
 
-		emitStackInfo();
 		if (dragged_item_index !== -1) {
 			const moved_item = detailItems.splice(dragged_item_index, 1)[0];
 			moved_item.position = square_number;
