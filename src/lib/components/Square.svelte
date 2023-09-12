@@ -50,8 +50,6 @@
 
 		if (dragged_item_index !== -1) {
 			const moved_item = detailItems.splice(dragged_item_index, 1)[0];
-			moved_item.position = square_number;
-			moved_item.current_level = detailItems.length + 1;
 			detailItems.unshift(moved_item);
 			currently_dragged_board_piece = moved_item;
 		} else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
