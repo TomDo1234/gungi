@@ -39,7 +39,7 @@ export function availableMoves(piece: Piece | undefined) {
     const col = position % 9;
 
     if (display_name === 'Pawn') {
-        return Array.from({ length: 2 }, (_, i) => (row - i - 1) * 9 + col)
+        return Array.from({ length: 1 }, (_, i) => (row - i - 1) * 9 + col)
     }
 
     return []

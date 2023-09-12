@@ -1,8 +1,6 @@
 <div
 	class="bg-[#eecaa0] border-[#bc7e38] {square_is_valid_move && 'border-purple-600'}
-	 border-t tablet:border-t-2 border-r p-1.5 tablet:border-r-2 border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square
-					{square_number % 9 === 0 && 'border-l tablet:border-l-2'} {square_number >= 72 &&
-		'border-b tablet:border-b-2'}"
+	border-[0.5px] tablet:border border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square"
 	use:dndzone={options}
 	on:consider={handleDnd}
 	on:finalize={handleDnd}
@@ -38,7 +36,7 @@
 	}
 
 	function emitPieceInfo(piece: Piece) {
-		dispatch('dropped_piece_info', { piece,square_number });
+		dispatch('dropped_piece_info', { piece, square_number });
 	}
 
 	function handleDnd(e: CustomEvent) {
@@ -64,6 +62,6 @@
 		morphDisabled: true,
 		dropFromOthersDisabled: items.length >= 3 || !square_is_valid_move,
 		dropTargetClasses: ['border-purple-600'],
-		dropTargetStyle: {},
+		dropTargetStyle: {}
 	};
 </script>
