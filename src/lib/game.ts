@@ -138,6 +138,17 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
             }
         }
     }
+    else if (display_name === 'General') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,0]]
+            case 2:
+                return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
+            default: {
+                return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0],[-2,0],[-2,1],[-2,-1]]
+            }
+        }
+    }
     return []
 }
 
