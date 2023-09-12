@@ -39,7 +39,7 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
                 return [[-1,0],[-1,-1],[-1,1]]
         }
     }
-    else if (display_name === "Marshal (King)" || display_name === "Fortress") {
+    else if (display_name === "Marshal (King)" || display_name === "Fortress" || display_name === 'Captain') {
         return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
     }
     else if (display_name === 'Spy') {
@@ -79,6 +79,50 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
                     moves.push([-i,0])
                 }
                 return moves;
+            }
+        }
+    }
+    else if (display_name === 'Samurai') {
+        switch(current_level) {
+            case 1:
+                return [[1,1],[1,-1],[-1,-1],[-1,1]]
+            case 2:
+                return [[2,2],[2,-2],[-2,-2],[-2,2]]
+            default: {
+                const moves: [number,number][] = [];
+                for (let i = 0;i < 9; i++) {
+                    moves.push([-i,-i])
+                    moves.push([-i,i])
+                    moves.push([i,i])
+                    moves.push([i,-i])
+                }
+                return moves;
+            }
+        }
+    }
+    else if (display_name === 'Musketeer') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0]]
+            case 2:
+                return [[-1,0],[-2,0]]
+            default: {
+                const moves: [number,number][] = [];
+                for (let i = 0;i < 9; i++) {
+                    moves.push([-i,0])
+                }
+                return moves;
+            }
+        }
+    }
+    else if (display_name === 'Knight') {
+        switch(current_level) {
+            case 1:
+                return [[0,-1],[0,1],[-2,1],[-2,-1]]
+            case 2:
+                return [[-1,-2],[-1,2],[-2,1],[-2,-1]]
+            default: {
+                return [[-1,-2],[-1,2],[-2,1],[-2,-1],[1,2],[1,-2],[2,-1],[2,1]]
             }
         }
     }
