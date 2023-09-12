@@ -40,7 +40,7 @@ export function availableMoves(piece: Piece | undefined) {
     return []
 }
 
-export function availableStockpileMoves(piece: Piece | null,board_state: Piece[][]) {
+export function availableStockpileMoves(piece: Piece | null,board_state: Array<{ id: number, pieces: Piece[] }>[]) {
     if (!piece) {
         return []
     }
@@ -50,8 +50,11 @@ export function availableStockpileMoves(piece: Piece | null,board_state: Piece[]
         const pawn_taken_columns: number[] = [];
         for (const row of board_state) {
             for (const [i,square] of row.entries()) {
-                if (square?.display_name === "Pawn" && square?.color === piece.color) {
-                    pawn_taken_columns.push(i)
+                for (const square_piece of square.pieces) {
+                    if (square_piece?.display_name === "Pawn" && square_piece?.color === piece.color) {
+                        pawn_taken_columns.push(i)
+                        break;
+                    }
                 }
             }
         }

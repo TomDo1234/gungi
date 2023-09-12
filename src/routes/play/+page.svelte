@@ -34,14 +34,16 @@
 	import type { Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 
-	let board_state: Array<{ id: number } | Piece>[] = Array.from({ length: 9 }, (_, i) =>
-		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j }))
+	let board_state: Array<{ id: number, pieces: Piece[] }>[] = Array.from({ length: 9 }, (_, i) =>
+		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j,pieces:[] }))
 	);
 
 	function update_board_state(e: CustomEvent) {
 		const { piece,square_number } = e.detail;
 		piece.id = square_number;
-		board_state[Math.floor(square_number / 9)][square_number % 9] = piece
+		const square = board_state[Math.floor(square_number / 9)][square_number % 9]
+		square.pieces.unshift(piece);
+		board_state = board_state
 	}
 
 	let currently_hovered_tower_details: Piece[] = [];
@@ -61,7 +63,7 @@
 			available_moves = availableMoves(currently_hovered_tower_details.at(-1));
 		}
 		if (currently_dragged_stockpile_piece) {
-			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state as Piece[][]);
+			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state);
 		}
 	}
 </script>
