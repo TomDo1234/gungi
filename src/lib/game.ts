@@ -35,6 +35,15 @@ export function availableMoves(piece: Piece | undefined) {
         return []
     }
     const { position,display_name } = piece;
-    console.log(Math.floor(position / 9), position % 9)
+    const row = Math.floor(position / 9)
+    const col = position % 9;
     return []
+}
+
+export function availableStockpileMoves(piece: Piece | null) {
+    if (!piece) {
+        return []
+    }
+
+    return Array.from({ length: 27 }, (_, i) => 54 + i);
 }

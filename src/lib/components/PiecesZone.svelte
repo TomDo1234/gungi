@@ -65,6 +65,7 @@
 	import { piece_data, type Piece } from '$lib/pieces';
 
 	export let tower_details: Piece[];
+	export let currently_dragged_stockpile_piece: Piece | null;
 
 	const player_data = [
 		{
@@ -97,6 +98,7 @@
 				(item) => item?.display_name === detailItems[dragged_item_index]?.display_name
 			);
 			updated_player_data[update_index].amount -= 1;
+			currently_dragged_stockpile_piece = updated_player_data[update_index];
 		}
 
 		player_data[player_number].piece_data = updated_player_data;

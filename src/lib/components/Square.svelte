@@ -1,5 +1,6 @@
 <div
-	class="bg-[#eecaa0] border-[#bc7e38] border-t tablet:border-t-2 border-r p-1.5 tablet:border-r-2 border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square
+	class="bg-[#eecaa0] border-[#bc7e38] {square_is_valid_move && 'border-purple-600'}
+	 border-t tablet:border-t-2 border-r p-1.5 tablet:border-r-2 border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square
 					{square_number % 9 === 0 && 'border-l tablet:border-l-2'} {square_number >= 72 &&
 		'border-b tablet:border-b-2'}"
 	use:dndzone={options}
@@ -46,9 +47,8 @@
 			const moved_item = detailItems.splice(dragged_item_index, 1)[0];
 			moved_item.position = square_number;
 			detailItems.unshift(moved_item);
-		}
-		else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
-			detailItems[0].position = square_number
+		} else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
+			detailItems[0].position = square_number;
 		}
 
 		items = detailItems;
