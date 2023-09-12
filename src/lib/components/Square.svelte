@@ -52,6 +52,7 @@
 
 	$: options = {
 		items,
+		morphDisabled: true,
 		dropFromOthersDisabled: items.length >= 3 || !square_is_valid_move,
 		dropTargetClasses: ['!outline-none']
 	};
