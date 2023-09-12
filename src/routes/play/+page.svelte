@@ -5,9 +5,9 @@
 		class="flex flex-col laptop:flex-row gap-y-5 gap-x-6 laptop:gap-x-12 w-full justify-around items-center px-3 tablet:px-8 laptop:px-12"
 	>
 		<div class="grid grid-cols-9 h-fit w-full tablet:w-[unset]">
-			{#each board_state as row}
-				{#each row as square, i}
-					<Square {i} />
+			{#each board_state as row,i}
+				{#each row as _, j}
+					<Square square_number={9*i + j} square_is_valid_move={true} />
 				{/each}
 			{/each}
 		</div>

@@ -1,6 +1,6 @@
 <div
 	class="bg-[#eecaa0] border-[#bc7e38] border-t tablet:border-t-2 border-r p-1.5 tablet:border-r-2 border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square
-					{i % 9 === 0 && 'border-l tablet:border-l-2'} {i >= 72 && 'border-b tablet:border-b-2'}"
+					{square_number % 9 === 0 && 'border-l tablet:border-l-2'} {square_number >= 72 && 'border-b tablet:border-b-2'}"
 	use:dndzone={options}
 	on:consider={handleDnd}
 	on:finalize={handleDnd}
@@ -16,7 +16,8 @@
 	import Tile from '$lib/components/Tile.svelte';
 
 	// export let square: BoardSquare;
-	export let i: number; //Square number
+	export let square_number: number; //Square number
+	export let square_is_valid_move = false;
     
 	let items: Piece[] = [];
 
@@ -34,6 +35,7 @@
 
     $: options = {
         items,
-        dropFromOthersDisabled: items.length >= 3
+        dropFromOthersDisabled: items.length >= 3 || !square_is_valid_move,
+		dropTargetClasses: ['!outline-none']
     }
 </script>
