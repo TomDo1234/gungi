@@ -7,7 +7,7 @@
 		<div class="grid grid-cols-9 h-fit w-full tablet:w-[unset]">
 			{#each board_state as row,i}
 				{#each row as _, j}
-					<Square square_number={9*i + j} square_is_valid_move={true} on:tower_details={showTowerDetails}  />
+					<Square square_number={9*i + j} square_is_valid_move={true} on:tower_details={showTowerDetails} on:mouseleave={clearTowerDetails}  />
 				{/each}
 			{/each}
 		</div>
@@ -27,6 +27,9 @@
 	let currently_hovered_tower_details: Piece[] = [];
 	function showTowerDetails(e: CustomEvent) {
 		currently_hovered_tower_details = e.detail.items
+	}
+	function clearTowerDetails() {
+		currently_hovered_tower_details = [];
 	}
 </script>
 

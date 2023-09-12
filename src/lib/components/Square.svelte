@@ -5,6 +5,8 @@
 	use:dndzone={options}
 	on:consider={handleDnd}
 	on:finalize={handleDnd}
+	role="application"
+	on:mouseleave
 >
 	{#each items as piece, i}
 		<Tile

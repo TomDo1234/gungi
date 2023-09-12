@@ -3,16 +3,20 @@
 	<div class="flex flex-col justify-between rounded-3xl bg-lime-950 text-white py-5 px-8">
 		<h4>Tower details</h4>
 		<div class="flex flex-wrap justify-around">
-			{#each { length: 3 } as _,i}
+			{#each { length: 3 } as _, i}
 				{@const piece = tower_details[i]}
 				{@const piece_slug_name = piece?.display_name?.toLowerCase()?.replaceAll(' ', '')}
-				<div class="flex flex-col gap-y-2 mt-2" class:invisible={!piece} >
-					<h5 class="text-center font-medium" >Tier {tower_details.length - i}</h5>
-					<img
-						class="block aspect-square h-14"
-						src="/img/{piece?.color}-{piece_slug_name}-1.svg"
-						alt="{piece?.color}-{piece_slug_name}-1"
-					/>
+				<div class="flex flex-col gap-y-2 mt-2" class:invisible={!piece}>
+					<h5 class="text-center font-medium">Tier {tower_details.length - i}</h5>
+					{#if piece}
+						<img
+							class="block aspect-square h-14"
+							src="/img/{piece?.color}-{piece_slug_name}-1.svg"
+							alt="{piece?.color}-{piece_slug_name}-1"
+						/>
+					{:else}
+						<div class="block aspect-square h-14" ></div>
+					{/if}
 				</div>
 			{/each}
 		</div>
