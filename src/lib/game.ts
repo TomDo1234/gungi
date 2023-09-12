@@ -30,6 +30,11 @@ export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[]
     return items
 }
 
-export function availableMoves(piece: Piece | undefined,board_state: {id: number}[][]) {
-    return piece
+export function availableMoves(piece: Piece | undefined) {
+    if (!piece?.position) {
+        return []
+    }
+    const { position,display_name } = piece;
+    console.log(Math.floor(position / 9), position % 9)
+    return []
 }

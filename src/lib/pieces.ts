@@ -1,4 +1,4 @@
-export type Piece = { id: number, amount: number; levels: number; display_name: string; note?: string,color?: 'white' | 'black' };
+export type Piece = { id: number | string, amount: number; levels: number; display_name: string; note?: string,color?: 'white' | 'black', position?: number };
 
 export type BoardSquare = { id: number; pieces: Array<Piece> }
 

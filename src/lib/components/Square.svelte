@@ -20,7 +20,7 @@
 </div>
 
 <script lang="ts">
-	import { dndzone, type DndEventInfo } from 'svelte-dnd-action-gungi';
+	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import type { Piece } from '$lib/pieces';
 	import Tile from '$lib/components/Tile.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -37,14 +37,18 @@
 	}
 
 	function handleDnd(e: CustomEvent) {
-		const { items: detailItems }: { items: Item[]; info: DndEventInfo } = e.detail;
+		const { items: detailItems, info }: { items: Piece[]; info: DndEventInfo } = e.detail;
 		const dragged_item_index = detailItems.findIndex(
 			(item) => item.id === 'id:dnd-shadow-placeholder-0000'
 		);
 
 		if (dragged_item_index !== -1) {
 			const moved_item = detailItems.splice(dragged_item_index, 1)[0];
+			moved_item.position = square_number;
 			detailItems.unshift(moved_item);
+		}
+		else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
+			detailItems[0].position = square_number
 		}
 
 		items = detailItems;
@@ -54,6 +58,6 @@
 		items,
 		morphDisabled: true,
 		dropFromOthersDisabled: items.length >= 3 || !square_is_valid_move,
-		dropTargetClasses: ['!outline-none','border-purple-600']
+		dropTargetClasses: ['!outline-none', 'border-purple-600']
 	};
 </script>
