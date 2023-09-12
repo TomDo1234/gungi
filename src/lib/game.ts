@@ -30,28 +30,65 @@ export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[]
     return items
 }
 
+function getMovesIn2DForm({ display_name, current_level }: Piece): [number,number][] {
+    if (display_name === 'Pawn') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0]]
+            default:
+                return [[-1,0],[-1,-1],[-1,1]]
+        }
+    }
+    else if (display_name === "Marshal (King)") {
+        return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
+    }
+    else if (display_name === 'Spy') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0]]
+            case 2:
+                return [[1,1],[1,-1],[-1,-1],[-1,1]]
+            default: {
+                const moves: [number,number][] = [];
+                for (let i = 0;i < 9; i++) {
+                    moves.push([-i,-i])
+                    moves.push([-i,i])
+                    moves.push([i,i])
+                    moves.push([i,-i])
+                    moves.push([0,-i])
+                    moves.push([0,i])
+                    moves.push([i,0])
+                    moves.push([-i,0])
+                }
+                return moves;
+            }
+        }
+    }
+    return []
+}
+
+function getLegalMoves(position: number,moves: [number,number][]): number[] {
+    const row = Math.floor(position / 9)
+    const col = position % 9;
+    const result: number[] = [];
+    for (const [vertical_movement,horizontal_movement] of moves) {
+        if (row + vertical_movement > 8 || row + vertical_movement < 0 || col + horizontal_movement > 8 || col + horizontal_movement < 0) {
+            continue;
+        }
+        result.push((row + vertical_movement) * 9 + col + horizontal_movement)
+    }
+    return result
+}
+
 export function availableMoves(piece: Piece | undefined) {
     if (!piece?.position) {
         return []
     }
-    const { position,display_name,current_level } = piece;
-    const row = Math.floor(position / 9)
-    const col = position % 9;
+    const { position } = piece;
 
-    if (display_name === 'Pawn') {
-        switch(current_level) {
-            case 1:
-                return [(row - 1) * 9 + col]
-            default:
-                return [(row - 1) * 9 + col,(row - 1) * 9 + col - 1,(row - 1) * 9 + col + 1]
-        }
-    }
-    else if (display_name === "Marshal (King)") {
-        return [(row - 1) * 9 + col,(row + 1) * 9 + col,row * 9 + col - 1,row * 9 + col + 1
-            ,(row + 1) * 9 + col + 1,(row + 1) * 9 + col - 1,(row - 1) * 9 + col + 1,(row - 1) * 9 + col - 1]
-    }
+    const moves_in_2d = getMovesIn2DForm(piece);
 
-    return []
+    return getLegalMoves(position,moves_in_2d)
 }
 
 export function availableStockpileMoves(piece: Piece | null,board_state: Array<{ id: number, pieces: Piece[] }>[]) {
