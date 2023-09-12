@@ -1,5 +1,5 @@
 <div
-	class="bg-[#eecaa0] border-[#bc7e38] {square_is_valid_move && 'border-purple-600'} p-1.5
+	class="bg-[#eecaa0] border-[#bc7e38] {items.length < 3 && square_is_valid_move && 'border-purple-600'} p-1.5
 	border-[0.5px] tablet:border border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square"
 	use:dndzone={options}
 	on:consider={handleDnd}
