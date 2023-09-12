@@ -15,7 +15,6 @@
 	import { dndzone, type DndEventInfo } from 'svelte-dnd-action-gungi';
 	import type { Piece } from '$lib/pieces';
 	import Tile from '$lib/components/Tile.svelte';
-	import { stringify } from 'postcss';
 
 	// export let square: BoardSquare;
 	export let square_number: number; //Square number

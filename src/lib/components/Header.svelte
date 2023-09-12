@@ -4,7 +4,7 @@
     <a href="/play" >Contact</a>
 </header>
 
-<style class="postcss" >
+<style type="postcss" >
     a:hover {
         @apply text-green-600;   
     }
