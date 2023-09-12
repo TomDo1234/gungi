@@ -61,7 +61,7 @@
 	$: {
 		available_moves = []
 		if (currently_hovered_tower_details.length > 0) {
-			available_moves = availableMoves(currently_hovered_tower_details.at(-1));
+			available_moves = availableMoves(currently_hovered_tower_details?.[0]);
 		}
 		if (currently_dragged_stockpile_piece) {
 			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state);

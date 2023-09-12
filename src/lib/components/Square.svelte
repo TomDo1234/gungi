@@ -45,12 +45,15 @@
 			(item) => item.id === 'id:dnd-shadow-placeholder-0000'
 		);
 
+		emitStackInfo();
 		if (dragged_item_index !== -1) {
 			const moved_item = detailItems.splice(dragged_item_index, 1)[0];
 			moved_item.position = square_number;
+			moved_item.current_level = detailItems.length + 1;
 			detailItems.unshift(moved_item);
 		} else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
 			detailItems[0].position = square_number;
+			detailItems[0].current_level = detailItems.length;
 			emitPieceInfo(detailItems[0]);
 		}
 

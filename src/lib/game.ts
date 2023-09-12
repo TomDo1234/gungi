@@ -34,12 +34,17 @@ export function availableMoves(piece: Piece | undefined) {
     if (!piece?.position) {
         return []
     }
-    const { position,display_name } = piece;
+    const { position,display_name,current_level } = piece;
     const row = Math.floor(position / 9)
     const col = position % 9;
 
     if (display_name === 'Pawn') {
-        return Array.from({ length: 1 }, (_, i) => (row - i - 1) * 9 + col)
+        switch(current_level) {
+            case 1:
+                return [(row - 1) * 9 + col]
+            default:
+                return [(row - 1) * 9 + col,(row - 1) * 9 + col - 1,(row - 1) * 9 + col + 1]
+        }
     }
     else if (display_name === "Marshal (King)") {
         return [(row - 1) * 9 + col,(row + 1) * 9 + col,row * 9 + col - 1,row * 9 + col + 1
