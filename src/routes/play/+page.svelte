@@ -16,6 +16,7 @@
 							on:tower_details={showTowerDetails}
 							on:mouseleave={clearTowerDetails}
 							on:dropped_piece_info={update_board_state}
+							bind:currently_dragged_board_piece
 						/>
 					{/key}
 				{/each}
@@ -56,12 +57,13 @@
 	}
 
 	let currently_dragged_stockpile_piece: Piece | null = null;
+	let currently_dragged_board_piece: Piece | null = null;
 
 	let available_moves: number[] = [];
 	$: {
 		available_moves = []
-		if (currently_hovered_tower_details.length > 0) {
-			available_moves = availableMoves(currently_hovered_tower_details?.[0]);
+		if (currently_dragged_board_piece || currently_hovered_tower_details.length > 0) {
+			available_moves = availableMoves(currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece);
 		}
 		if (currently_dragged_stockpile_piece) {
 			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state);

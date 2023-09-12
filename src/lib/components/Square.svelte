@@ -1,5 +1,7 @@
 <div
-	class="bg-[#eecaa0] border-[#bc7e38] {items.length < 3 && square_is_valid_move && 'border-purple-600'} p-1.5
+	class="bg-[#eecaa0] border-[#bc7e38] {items.length < 3 &&
+		square_is_valid_move &&
+		'border-purple-600'} p-1.5
 	border-[0.5px] tablet:border border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square"
 	use:dndzone={options}
 	on:consider={handleDnd}
@@ -27,6 +29,7 @@
 	// export let square: BoardSquare;
 	export let square_number: number; //Square number
 	export let square_is_valid_move = false;
+	export let currently_dragged_board_piece: Piece | null;
 
 	let items: Piece[] = [];
 	const dispatch = createEventDispatcher();
@@ -50,11 +53,14 @@
 			moved_item.position = square_number;
 			moved_item.current_level = detailItems.length + 1;
 			detailItems.unshift(moved_item);
+			currently_dragged_board_piece = moved_item;
 		} else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
 			detailItems[0].position = square_number;
 			detailItems[0].current_level = detailItems.length;
 			emitPieceInfo(detailItems[0]);
+			currently_dragged_board_piece = null;
 		}
+		console.log(currently_dragged_board_piece)
 
 		items = detailItems;
 	}
