@@ -24,6 +24,7 @@
 		</div>
 		<PiecesZone
 			tower_details={currently_hovered_tower_details}
+			{ board_state }
 			bind:currently_dragged_stockpile_piece
 		/>
 	</div>
@@ -32,10 +33,10 @@
 <script lang="ts">
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
-	import type { Piece } from '$lib/pieces';
+	import type { BoardState, Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 
-	let board_state: Array<{ id: number, pieces: Piece[] }>[] = Array.from({ length: 9 }, (_, i) =>
+	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j,pieces:[] }))
 	);
 

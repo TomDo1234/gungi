@@ -25,6 +25,7 @@
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between">
 				<h4>{player.name}'s stockpile</h4>
+				<h4>Army Size: {army_count(board_state,player.color)}</h4>
 			</div>
 			<div
 				class="grid grid-cols-3 tablet:grid-cols-7 laptop:grid-cols-6 desktop:grid-cols-8 gap-4"
@@ -62,13 +63,14 @@
 
 <script lang="ts">
 	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
-	import { handleStockpileDnDConsider } from '$lib/game';
-	import { piece_data, type Piece } from '$lib/pieces';
+	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
+	import { piece_data, type Piece, type BoardState } from '$lib/pieces';
 
 	export let tower_details: Piece[];
+	export let board_state: BoardState;
 	export let currently_dragged_stockpile_piece: Piece | null;
 
-	const player_data = [
+	const player_data: PlayerData[] = [
 		{
 			name: 'Player 1',
 			color: 'white',
@@ -86,6 +88,11 @@
 			})
 		}
 	];
+
+	function army_count(board_state: BoardState,color: 'white' | 'black'): number {
+		//Essentially, count the pieces of the same color in the entire board in all stacks
+		return board_state.reduce((a,b) => a + b.reduce((count,square) => count + square.pieces.filter(piece => piece.color === color).length,0),0)
+	}
 
 	function handleConsider(e: CustomEvent, player_number: number) {
 		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);

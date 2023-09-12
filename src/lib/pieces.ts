@@ -9,7 +9,7 @@ export type Piece = {
     current_level?: number
 };
 
-export type BoardSquare = { id: number; pieces: Array<Piece> }
+export type BoardState = { id: number, pieces: Piece[] }[][];
 
 export const piece_data: Piece[] = [
     { id: 1, amount: 4, levels: 3, display_name: 'Major General' },

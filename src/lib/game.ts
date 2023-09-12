@@ -1,9 +1,9 @@
 import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action-gungi";
-import type { Piece } from "./pieces";
+import type { BoardState, Piece } from "./pieces";
 
 export type PlayerData = {
     name: string;
-    color: string;
+    color: 'white' | 'black';
     piece_data: Piece[];
 }
 
@@ -198,7 +198,7 @@ export function availableMoves(piece: Piece | undefined) {
     return getLegalMoves(position,moves_in_2d)
 }
 
-export function availableStockpileMoves(piece: Piece | null,board_state: Array<{ id: number, pieces: Piece[] }>[]) {
+export function availableStockpileMoves(piece: Piece | null,board_state: BoardState) {
     if (!piece) {
         return []
     }

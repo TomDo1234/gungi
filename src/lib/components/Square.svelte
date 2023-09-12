@@ -26,7 +26,6 @@
 	import Tile from '$lib/components/Tile.svelte';
 	import { createEventDispatcher } from 'svelte';
 
-	// export let square: BoardSquare;
 	export let square_number: number; //Square number
 	export let square_is_valid_move = false;
 	export let currently_dragged_board_piece: Piece | null;
@@ -58,7 +57,6 @@
 			emitPieceInfo(detailItems[0]);
 			currently_dragged_board_piece = null;
 		}
-		console.log(currently_dragged_board_piece)
 
 		items = detailItems;
 	}
