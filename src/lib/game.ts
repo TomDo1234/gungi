@@ -126,6 +126,17 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
             }
         }
     }
+    else if (display_name === 'Archer') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
+            case 2:
+                return [[-2,0],[-2,-2],[-2,2],[0,2],[0,-2],[2,2],[2,-2],[2,0],[-1,-2],[-1,2],[-2,1],[-2,-1],[1,2],[1,-2],[2,-1],[2,1]]
+            default: {
+                return [[-3,0],[-3,-3],[-3,3],[0,3],[0,-3],[3,3],[3,-3],[3,0]]
+            }
+        }
+    }
     return []
 }
 
