@@ -59,6 +59,7 @@
 
 	let available_moves: number[] = [];
 	$: {
+		available_moves = []
 		if (currently_hovered_tower_details.length > 0) {
 			available_moves = availableMoves(currently_hovered_tower_details.at(-1));
 		}
