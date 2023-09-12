@@ -39,7 +39,7 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
                 return [[-1,0],[-1,-1],[-1,1]]
         }
     }
-    else if (display_name === "Marshal (King)") {
+    else if (display_name === "Marshal (King)" || display_name === "Fortress") {
         return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
     }
     else if (display_name === 'Spy') {
@@ -55,6 +55,24 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
                     moves.push([-i,i])
                     moves.push([i,i])
                     moves.push([i,-i])
+                    moves.push([0,-i])
+                    moves.push([0,i])
+                    moves.push([i,0])
+                    moves.push([-i,0])
+                }
+                return moves;
+            }
+        }
+    }
+    else if (display_name === 'Cannon') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0],[1,0],[0,1],[0,-1]]
+            case 2:
+                return [[-1,0],[1,0],[0,1],[0,-1],[-2,0],[2,0],[0,2],[0,-2]]
+            default: {
+                const moves: [number,number][] = [];
+                for (let i = 0;i < 9; i++) {
                     moves.push([0,-i])
                     moves.push([0,i])
                     moves.push([i,0])
