@@ -21,7 +21,7 @@
 			</div>
 		{/each}
 	</div>
-	<PiecesZone tower_details={[]} />
+	<PiecesZone tower_details={[]} bind:currently_dragged_stockpile_piece />
 </div>
 
 <script lang="ts">
@@ -31,8 +31,10 @@
 	import Tile from './Tile.svelte';
 	import Square from './Square.svelte';
 	import { handleStockpileDnDConsider } from '$lib/game';
+	import type { Piece } from '$lib/pieces';
 
 	let idx = 0;
+	let currently_dragged_stockpile_piece: Piece | null = null;
 
 	let items = [
 		{
