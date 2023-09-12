@@ -55,7 +55,6 @@ export function availableStockpileMoves(piece: Piece | null,board_state: Piece[]
                 }
             }
         }
-        console.log(pawn_taken_columns)
 
         return default_moves.filter(i => !pawn_taken_columns.includes(i % 9))
     }

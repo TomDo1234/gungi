@@ -15,7 +15,7 @@
 							alt="{piece?.color}-{piece_slug_name}-1"
 						/>
 					{:else}
-						<div class="block aspect-square h-14" ></div>
+						<div class="block aspect-square h-14" />
 					{/if}
 				</div>
 			{/each}
@@ -31,28 +31,28 @@
 				use:dndzone={{
 					items: player.piece_data,
 					dropFromOthersDisabled: true,
-					dropTargetClasses: ['!outline-none']
+					dropTargetClasses: ['!outline-none'],
+					dragDisabled: i === 1
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 			>
-				{#each player.piece_data as piece (piece.id)}
+				{#each player.piece_data as piece, i}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
-					<div
-						class="h-12 laptop:h-14 aspect-square cursor-pointer relative"
-						class:hidden={piece.amount <= 0}
-					>
-						<img
-							class="block"
-							draggable="true"
-							src="/img/{player.color}-{piece_slug_name}-1.svg"
-							alt="{player.color}-{piece_slug_name}-1"
-						/>
-						<div
-							class="rounded-full number_img h-7 bg-blue-950 aspect-square flex justify-center items-center absolute -top-3 -right-3"
-						>
-							{piece.amount}
+					{#key `${piece.id}|${i}|${player.color}`}
+						<div class="h-12 laptop:h-14 aspect-square relative" class:hidden={piece.amount <= 0}>
+							<img
+								class="block"
+								draggable="true"
+								src="/img/{player.color}-{piece_slug_name}-1.svg"
+								alt="{player.color}-{piece_slug_name}-1"
+							/>
+							<div
+								class="rounded-full number_img h-7 bg-blue-950 aspect-square flex justify-center items-center absolute -top-3 -right-3"
+							>
+								{piece.amount}
+							</div>
 						</div>
-					</div>
+					{/key}
 				{/each}
 			</div>
 		</div>
@@ -97,7 +97,9 @@
 			const update_index = updated_player_data.findIndex(
 				(item) => item?.display_name === detailItems[dragged_item_index]?.display_name
 			);
-			updated_player_data[update_index].amount -= 1;
+
+			updated_player_data[update_index].amount -= currently_dragged_stockpile_piece ? 0 : 1;
+
 			currently_dragged_stockpile_piece = updated_player_data[update_index];
 		}
 
