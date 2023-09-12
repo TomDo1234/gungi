@@ -13,7 +13,7 @@
 	.square {
 		border-radius: calc(min(5vmin, 50px) / 6.25);
 		display: flex;
-		align-items: center;
+		align-items: center;                              
 		justify-content: center;
 		background-color: #fff6eb;
 	}
