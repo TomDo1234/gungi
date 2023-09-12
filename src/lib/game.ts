@@ -40,10 +40,25 @@ export function availableMoves(piece: Piece | undefined) {
     return []
 }
 
-export function availableStockpileMoves(piece: Piece | null) {
+export function availableStockpileMoves(piece: Piece | null,board_state: Piece[][]) {
     if (!piece) {
         return []
     }
 
-    return Array.from({ length: 27 }, (_, i) => 54 + i);
+    const default_moves = Array.from({ length: 27 }, (_, i) => 54 + i);
+    if (piece.display_name === "Pawn") {
+        const pawn_taken_columns: number[] = [];
+        for (const row of board_state) {
+            for (const [i,square] of row.entries()) {
+                if (square?.display_name === "Pawn" && square?.color === piece.color) {
+                    pawn_taken_columns.push(i)
+                }
+            }
+        }
+        console.log(pawn_taken_columns)
+
+        return default_moves.filter(i => !pawn_taken_columns.includes(i % 9))
+    }
+
+    return default_moves;
 }

@@ -37,6 +37,10 @@
 		dispatch('tower_details', { items });
 	}
 
+	function emitPieceInfo(piece: Piece) {
+		dispatch('dropped_piece_info', { piece,square_number });
+	}
+
 	function handleDnd(e: CustomEvent) {
 		const { items: detailItems, info }: { items: Piece[]; info: DndEventInfo } = e.detail;
 		const dragged_item_index = detailItems.findIndex(
@@ -49,6 +53,7 @@
 			detailItems.unshift(moved_item);
 		} else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
 			detailItems[0].position = square_number;
+			emitPieceInfo(detailItems[0]);
 		}
 
 		items = detailItems;

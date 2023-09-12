@@ -15,6 +15,7 @@
 							{ square_is_valid_move }
 							on:tower_details={showTowerDetails}
 							on:mouseleave={clearTowerDetails}
+							on:dropped_piece_info={update_board_state}
 						/>
 					{/key}
 				{/each}
@@ -33,14 +34,21 @@
 	import type { Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 
-	let board_state: { id: number }[][] = Array.from({ length: 9 }, (_, i) =>
+	let board_state: Array<{ id: number } | Piece>[] = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j }))
 	);
+
+	function update_board_state(e: CustomEvent) {
+		const { piece,square_number } = e.detail;
+		piece.id = square_number;
+		board_state[Math.floor(square_number / 9)][square_number % 9] = piece
+	}
 
 	let currently_hovered_tower_details: Piece[] = [];
 	function showTowerDetails(e: CustomEvent) {
 		currently_hovered_tower_details = e.detail.items;
 	}
+
 	function clearTowerDetails() {
 		currently_hovered_tower_details = [];
 	}
@@ -53,9 +61,8 @@
 			available_moves = availableMoves(currently_hovered_tower_details.at(-1));
 		}
 		if (currently_dragged_stockpile_piece) {
-			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece);
+			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state as Piece[][]);
 		}
-		console.log(currently_dragged_stockpile_piece);
 	}
 </script>
 
