@@ -34,7 +34,6 @@
 		}
 
 		items = detailItems;
-		console.log(items,square_number)
 	}
 
 	$: options = {

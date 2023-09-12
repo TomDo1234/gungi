@@ -29,7 +29,6 @@
 		}
 
 		items = detailItems;
-		console.log(items,detailItems,dragged_item_index)
 	}
 
 	$: options = {

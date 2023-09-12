@@ -15,11 +15,11 @@
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none']
 				}}
-				on:consider={(e) => (player_data[i].piece_data = handleStockpileDnDConsider(e, player_data[i].piece_data))}
+				on:consider={(e) => handleConsider(e,i)}
 			>
 				{#each player.piece_data as piece (piece.id)}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
-					<div class="h-12 laptop:h-14 aspect-square cursor-pointer relative">
+					<div class="h-12 laptop:h-14 aspect-square cursor-pointer relative" class:hidden={piece.amount <= 0} >
 						<img
 							class="block"
 							draggable="true"
@@ -39,7 +39,7 @@
 </div>
 
 <script lang="ts">
-	import { dndzone } from 'svelte-dnd-action-gungi';
+	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import { handleStockpileDnDConsider } from '$lib/game';
 	import { piece_data, type Piece } from '$lib/pieces';
 
@@ -61,6 +61,21 @@
 			})
 		}
 	];
+
+	function handleConsider(e: CustomEvent,player_number: number) {
+		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);
+		const { items: detailItems, info }: { items: Item[]; info: DndEventInfo } = e.detail;
+		const dragged_item_index = detailItems.findIndex(
+			(item) => item.id === 'id:dnd-shadow-placeholder-0000'
+		);
+
+		if (dragged_item_index !== -1 && info.trigger === TRIGGERS.DRAGGED_ENTERED) {
+			const update_index = updated_player_data.findIndex(item => item?.display_name === detailItems[dragged_item_index]?.display_name);
+			updated_player_data[update_index].amount -= 1;
+		}
+
+		player_data[player_number].piece_data = updated_player_data
+	}
 </script>
 
 <style lang="postcss">
