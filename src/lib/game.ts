@@ -149,6 +149,28 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
             }
         }
     }
+    else if (display_name === 'Lieutenant General') {
+        switch(current_level) {
+            case 1:
+                return [[-1,0],[-1,-1],[-1,1],[1,1],[1,-1]]
+            case 2:
+                return [[-1,0],[-1,-1],[-1,1],[1,1],[1,-1],[1,0]]
+            default: {
+                return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
+            }
+        }
+    }
+    else if (display_name === 'Major General') {
+        switch(current_level) {
+            case 1:
+                return [[-1,1],[-1,-1]]
+            case 2:
+                return [[-1,1],[-1,-1],[-1,0],[1,1],[1,-1]]
+            default: {
+                return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,0]]
+            }
+        }
+    }
     return []
 }
 
