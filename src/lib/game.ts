@@ -41,6 +41,10 @@ export function availableMoves(piece: Piece | undefined) {
     if (display_name === 'Pawn') {
         return Array.from({ length: 1 }, (_, i) => (row - i - 1) * 9 + col)
     }
+    else if (display_name === "Marshal (King)") {
+        return [(row - 1) * 9 + col,(row + 1) * 9 + col,row * 9 + col - 1,row * 9 + col + 1
+            ,(row + 1) * 9 + col + 1,(row + 1) * 9 + col - 1,(row - 1) * 9 + col + 1,(row - 1) * 9 + col - 1]
+    }
 
     return []
 }
