@@ -35,6 +35,7 @@
 					dragDisabled: i === 1
 				}}
 				on:consider={(e) => handleConsider(e, i)}
+				on:finalize={handleFinalize}
 			>
 				{#each player.piece_data as piece, i}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
@@ -104,6 +105,10 @@
 		}
 
 		player_data[player_number].piece_data = updated_player_data;
+	}
+
+	function handleFinalize() {
+		currently_dragged_stockpile_piece = null;
 	}
 </script>
 
