@@ -29,6 +29,7 @@
 			{ turn }
 			client_player_name={player_name}
 			bind:currently_dragged_stockpile_piece
+			bind:stack_turn
 		/>
 	</div>
 	<PlayerNameModal on:submit={(e) => player_name = e.detail.name} />

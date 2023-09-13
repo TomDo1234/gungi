@@ -1,7 +1,12 @@
 <div class="flex flex-col gap-y-6">
-	<h2 class="font-bold text-4xl">Game Phase</h2>
+	<div class="flex justify-between">
+		<h2 class="font-bold text-4xl">Game Phase</h2>
+		<h3 class="text-4xl font-bold text-purple-500">
+			{players_ready ? `(Turn ${turn})` : place_message}
+		</h3>
+	</div>
 	<div class="flex flex-col justify-between rounded-3xl bg-lime-950 text-white py-5 px-8">
-		<h4>Tower details {players_ready ? `(Turn ${turn})` : ''}</h4>
+		<h4>Tower details</h4>
 		<div class="flex flex-wrap justify-around">
 			{#each { length: 3 } as _, i}
 				{@const piece = tower_details[i]}
@@ -33,7 +38,8 @@
 					items: player.piece_data,
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
-					dragDisabled: i === 1 || army_count(board_state, player.color) >= 26
+					dragDisabled:
+						i === 1 || army_count(board_state, player.color) >= 26 || stack_turn % 2 !== (player_data[0].color === 'white' ? 1 : 0)
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
@@ -71,6 +77,7 @@
 	export let currently_dragged_stockpile_piece: Piece | null;
 	export let client_player_name: string | null = null;
 	export let turn: number;
+	export let stack_turn: number;
 
 	let players_ready = false;
 	const player_data: PlayerData[] = [
@@ -109,6 +116,8 @@
 		);
 	}
 
+	$: place_message = `${stack_turn % 2 === 1 ? 'white' : 'black'}'s turn to place`;
+
 	function handleConsider(e: CustomEvent, player_number: number) {
 		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);
 		const { items: detailItems, info }: { items: Item[]; info: DndEventInfo } = e.detail;
@@ -135,10 +144,12 @@
 			const dragged_item_index = detailItems.findIndex(
 				(item) => item.id === currently_dragged_stockpile_piece?.id
 			);
-			console.log(dragged_item_index)
-			const player_piece_data = player_data[0].piece_data
-			player_piece_data[dragged_item_index].amount +=  1;
+			console.log(dragged_item_index);
+			const player_piece_data = player_data[0].piece_data;
+			player_piece_data[dragged_item_index].amount += 1;
 			player_data[0].piece_data = player_piece_data;
+		} else {
+			stack_turn += 1;
 		}
 		currently_dragged_stockpile_piece = null;
 	}
