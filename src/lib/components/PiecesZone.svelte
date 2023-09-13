@@ -1,9 +1,28 @@
 <div class="flex flex-col gap-y-6">
+	<h2 class="font-bold text-4xl">{players_ready ? 'Game' : 'Draft'} Phase</h2>
 	<div class="flex justify-between">
-		<h2 class="font-bold text-4xl">Game Phase</h2>
-		<h3 class="text-4xl font-bold text-purple-500">
-			{players_ready ? `(Turn ${turn})` : place_message}
-		</h3>
+		{#each player_data as player, i}
+			<div class="flex gap-x-4 items-center flex-1">
+				<h4
+					class="text-4xl font-bold {stack_turn % 2 === (player.color === 'white' ? 1 : 0) &&
+						'text-purple-500'}"
+				>
+					{player.name}
+				</h4>
+				<img
+					class="h-10"
+					src="/img/{player?.color}-marshal(king)-1.svg"
+					alt="{player?.color}-marshal(king)-1"
+				/>
+			</div>
+			{#if i === 0}
+				<div class="flex-1 flex justify-center" >
+					<button class="rounded-2xl px-6 py-3 bg-dark-blue">
+						{players_ready ? 'FORFEIT' : 'READY'}
+					</button>
+				</div>
+			{/if}
+		{/each}
 	</div>
 	<div class="flex flex-col justify-between rounded-3xl bg-lime-950 text-white py-5 px-8">
 		<h4>Tower details</h4>
@@ -39,7 +58,9 @@
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
 					dragDisabled:
-						i === 1 || army_count(board_state, player.color) >= 26 || stack_turn % 2 !== (player_data[0].color === 'white' ? 1 : 0)
+						i === 1 ||
+						army_count(board_state, player.color) >= 26 ||
+						stack_turn % 2 !== (player_data[0].color === 'white' ? 1 : 0)
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
