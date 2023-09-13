@@ -1,5 +1,7 @@
 <div class="flex flex-col gap-y-6">
-	<h2 class="font-bold text-4xl">{players_ready ? 'Game' : 'Draft'} Phase {players_ready ? `- Turn ${turn}` : ''}</h2>
+	<h2 class="font-bold text-4xl">
+		{players_ready ? 'Game' : 'Draft'} Phase {players_ready ? `- Turn ${turn}` : ''}
+	</h2>
 	<div class="flex justify-between">
 		{#each player_data as player, i}
 			<div class="flex gap-x-4 items-center flex-1">
@@ -16,8 +18,11 @@
 				/>
 			</div>
 			{#if i === 0}
-				<div class="flex-1 flex justify-center" >
-					<button class="rounded-2xl px-6 py-3 bg-dark-blue" on:click={players_ready ? forfeit : () => players_ready = true} >
+				<div class="flex-1 flex justify-center">
+					<button
+						class="rounded-2xl px-6 py-3 bg-dark-blue"
+						on:click={players_ready ? forfeit : () => (players_ready = true)}
+					>
 						{players_ready ? 'FORFEIT' : 'READY'}
 					</button>
 				</div>
@@ -68,7 +73,11 @@
 				{#each player.piece_data as piece, i}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
 					{#key `${piece.id}|${i}|${player.color}`}
-						<div class="h-12 laptop:h-14 aspect-square relative" class:hidden={piece.amount <= 0}>
+						<div
+							class="h-12 laptop:h-14 aspect-square relative
+							{piece.display_name !== 'Marshal (King)' && stack_turn <= 2 ? 'pointer-events-none' : ''}"
+							class:hidden={piece.amount <= 0}
+						>
 							<img
 								class="block"
 								draggable="true"
@@ -137,9 +146,7 @@
 		);
 	}
 
-	function forfeit() {
-
-	}
+	function forfeit() {}
 
 	function handleConsider(e: CustomEvent, player_number: number) {
 		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);
