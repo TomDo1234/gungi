@@ -18,6 +18,7 @@
 							on:mouseleave={clearTowerDetails}
 							on:dropped_piece_info={update_board_state}
 							bind:currently_dragged_board_piece
+							bind:players_ready
 						/>
 					{/key}
 				{/each}
@@ -30,6 +31,7 @@
 			client_player_name={player_name}
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
+			bind:players_ready
 		/>
 	</div>
 	<PlayerNameModal on:submit={(e) => (player_name = e.detail.name)} />
@@ -47,6 +49,7 @@
 	let player_color: 'white' | 'black' = 'white';
 	let stack_turn = 1;
 	let turn = 1;
+	let players_ready = false;
 
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))

@@ -109,8 +109,8 @@
 	export let client_player_name: string | null = null;
 	export let turn: number;
 	export let stack_turn: number;
+	export let players_ready: boolean;
 
-	let players_ready = false;
 	const player_data: PlayerData[] = [
 		{
 			name: 'Anonymous (Player 1)',

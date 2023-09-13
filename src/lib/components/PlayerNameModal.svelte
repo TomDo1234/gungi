@@ -1,7 +1,6 @@
 {#if $open}
 	<div class="w-screen h-screen fixed flex justify-center items-center top-0 shadowy">
 		<div class="fixed bg-lime-950 py-10 px-12">
-			<div use:melt={$overlay} />
 			<div use:melt={$content} class="flex-col flex gap-y-5 items-start">
 				<h2 use:melt={$title}>Enter your name</h2>
 				<form class="flex flex-col gap-y-4" on:submit|preventDefault={onSubmit} >
@@ -24,9 +23,9 @@
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { createEventDispatcher } from 'svelte';
 	const {
-		elements: { overlay, content, title },
+		elements: { content, title },
 		states: { open }
-	} = createDialog({ defaultOpen: true });
+	} = createDialog({ defaultOpen: true,closeOnOutsideClick: false });
 
 	let name = '';
 
