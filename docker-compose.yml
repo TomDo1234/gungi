@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  gungi-frontend:
+    image: node:18
+    container_name: gungi_fe
+    working_dir: /usr/app
+    command: /bin/bash -c  "yarn && yarn dev --host"
+    volumes:
+      - .:/usr/app/
+      - /usr/app/backend
+      - gungi_fe_modules:/usr/app/node_modules
+    ports:
+      - 80:5173
+  gungi-backend:
+    image: node:18
+    container_name: gungi_be
+    working_dir: /usr/app
+    command: /bin/bash -c  "yarn && yarn dev"
+    volumes:
+      - .:/usr/app/backend
+      - gungi_be_modules:/usr/app/backend/node_modules
+    ports:
+      - 5000:5000
+volumes:
+  gungi_fe_modules:
+  gungi_be_modules:
+
