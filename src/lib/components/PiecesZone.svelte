@@ -54,7 +54,7 @@
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between items-center">
 				<h4>{player.name}'s stockpile</h4>
-				{#if stack_turn % 2 === (player.color === 'white' ? 1 : 0) && stack_turn <= 2}
+				{#if stack_turn % 2 === (player.color === 'white' ? 1 : 0) && stack_turn <= 2 && i === 0 }
 					<p class="text-purple-500 font-medium" >*Move your Marshal first</p>
 				{/if}
 				<h4>Army Size: ({army_count(board_state, player.color)} / 26)</h4>
@@ -75,7 +75,7 @@
 			>
 				{#each player.piece_data as piece, j}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
-					{#key `${piece.id}|${j}|${player.color}`}
+					{#key `${piece.id}|${i}|${j}|${player.color}`}
 						<div
 							class="h-12 laptop:h-14 aspect-square relative
 							{piece.display_name !== 'Marshal (King)' && stack_turn <= 2 ? 'pointer-events-none' : ''}"
