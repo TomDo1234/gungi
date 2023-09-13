@@ -133,7 +133,7 @@
 		const { items: detailItems, info }: { items: Item[]; info: DndEventInfo } = e.detail;
 		if (info.trigger !== TRIGGERS.DROPPED_INTO_ANOTHER) {
 			const dragged_item_index = detailItems.findIndex(
-				(item) => item.id === currently_dragged_stockpile_piece.id
+				(item) => item.id === currently_dragged_stockpile_piece?.id
 			);
 			console.log(dragged_item_index)
 			const player_piece_data = player_data[0].piece_data
