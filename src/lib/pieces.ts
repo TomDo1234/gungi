@@ -12,6 +12,13 @@ export type Piece = {
 export type BoardState = { id: number, pieces: Piece[] }[][];
 
 export const piece_data: Piece[] = [
+    {
+        id: 14,
+        amount: 1,
+        levels: 1,
+        display_name: 'Marshal (King)',
+        note: 'The Marshal moves the same for all tiers. Pieces cannot be stacked on the Marshal.'
+    },
     { id: 1, amount: 4, levels: 3, display_name: 'Major General' },
     { id: 2, amount: 4, levels: 3, display_name: 'Lieutenant General' },
     { id: 3, amount: 6, levels: 3, display_name: 'General' },
@@ -35,12 +42,5 @@ export const piece_data: Piece[] = [
     },
     { id: 10, amount: 2, levels: 3, display_name: 'Cannon', },
     { id: 11, amount: 2, levels: 3, display_name: 'Spy', },
-    { id: 12, amount: 9, levels: 3, display_name: 'Pawn', },
-    {
-        id: 14,
-        amount: 1,
-        levels: 1,
-        display_name: 'Marshal (King)',
-        note: 'The Marshal moves the same for all tiers. Pieces cannot be stacked on the Marshal.'
-    }
+    { id: 12, amount: 9, levels: 3, display_name: 'Pawn', }
 ];
