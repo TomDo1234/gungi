@@ -173,6 +173,7 @@
 			player_data[0].piece_data = player_piece_data;
 		} else {
 			stack_turn += 1;
+			turn += players_ready ? 1 : 0;
 		}
 		currently_dragged_stockpile_piece = null;
 	}
