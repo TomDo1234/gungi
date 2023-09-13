@@ -12,7 +12,7 @@
 					{#key square_number}
 						<Square
 							{square_number}
-							square_is_valid_move={ square_is_valid_move }
+							{square_is_valid_move}
 							is_client_turn={turn % 2 === (player_color === 'white' ? 1 : 0)}
 							on:tower_details={showTowerDetails}
 							on:mouseleave={clearTowerDetails}
@@ -25,14 +25,14 @@
 		</div>
 		<PiecesZone
 			tower_details={currently_hovered_tower_details}
-			{ board_state }
-			{ turn }
+			{board_state}
+			{turn}
 			client_player_name={player_name}
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
 		/>
 	</div>
-	<PlayerNameModal on:submit={(e) => player_name = e.detail.name} />
+	<PlayerNameModal on:submit={(e) => (player_name = e.detail.name)} />
 </main>
 
 <script lang="ts">
@@ -41,8 +41,7 @@
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
 	import type { BoardState, Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
-	import io from "socket.io-client";
-	import { PUBLIC_WS_ENDPOINT } from '$env/static/public';
+	import { socket } from '$lib/ws';
 
 	let player_name: string | null = null;
 	let player_color: 'white' | 'black' = 'white';
@@ -50,26 +49,29 @@
 	let turn = 1;
 
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
-		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j,pieces:[] }))
+		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
 
 	function update_board_state(e: CustomEvent) {
-		const { piece,square_number,mode } = e.detail;
+		const { piece, square_number, mode } = e.detail;
 		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
 		if (mode === 'add') {
 			piece.id = square_number;
-			const square = board_state[Math.floor(square_number / 9)][square_number % 9]
+			const square = board_state[Math.floor(square_number / 9)][square_number % 9];
 			square.pieces.unshift(piece);
-		}
-		else if (currently_dragged_piece_position) { 
+		} else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
-			const square = board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9]
+			const square =
+				board_state[Math.floor(currently_dragged_piece_position / 9)][
+					currently_dragged_piece_position % 9
+				];
 			square.pieces.shift();
 			turn += 1;
+			socket.emit("send_data_after_turn",board_state);
 		}
 
-		board_state = board_state
+		board_state = board_state;
 	}
 
 	let currently_hovered_tower_details: Piece[] = [];
@@ -86,16 +88,16 @@
 
 	let available_moves: number[] = [];
 	$: {
-		available_moves = []
+		available_moves = [];
 		if (currently_dragged_board_piece || currently_hovered_tower_details.length > 0) {
-			available_moves = availableMoves(currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece);
+			available_moves = availableMoves(
+				currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece
+			);
 		}
 		if (currently_dragged_stockpile_piece) {
-			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state);
+			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece, board_state);
 		}
 	}
-
-	const socket = io(PUBLIC_WS_ENDPOINT);
 </script>
 
 <style lang="postcss">

@@ -101,6 +101,7 @@
 	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
 	import { piece_data, type Piece, type BoardState } from '$lib/pieces';
+	import { socket } from '$lib/ws';
 
 	export let tower_details: Piece[];
 	export let board_state: BoardState;
@@ -180,6 +181,7 @@
 		} else {
 			stack_turn += 1;
 			turn += players_ready ? 1 : 0;
+			socket.emit("send_data_after_turn",board_state);
 		}
 		currently_dragged_stockpile_piece = null;
 	}

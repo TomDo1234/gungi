@@ -10,3 +10,5 @@ export type Piece = {
 };
 
 export type BoardState = { id: number, pieces: Piece[] }[][];
+
+export type GameState = {board_state: BoardState,turn: number}
