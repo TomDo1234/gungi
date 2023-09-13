@@ -8,7 +8,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server,{
   cors: {
-    origin: "http://localhost",
+    origin: "https://gungi.net",
     methods: ["GET", "POST"]
   }
 });
