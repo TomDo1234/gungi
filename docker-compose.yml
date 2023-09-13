@@ -15,7 +15,7 @@ services:
     image: node:18
     container_name: gungi_be
     working_dir: /usr/app
-    command: /bin/bash -c  "yarn && npx ts-node ./src/app.ts"
+    command: /bin/bash -c  "yarn && yarn dev"
     volumes:
       - ./backend/:/usr/app/
       - gungi_be_modules:/usr/app/node_modules

@@ -1,12 +1,21 @@
 import express from 'express';
+import { createServer } from 'node:http';
+import { Server } from 'socket.io';
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
+const game_io = io.of('/game_ws');
 const port = 5000;
 
-app.get('/', (req, res) => {
-  res.send('Hello, Express with TypeScript!');
+app.get('/', ( _, res) => {
+  res.send('Healthy');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+game_io.on('connection', (socket) => {
+  console.log('a user connected');
+});
+
+server.listen(port, () => {
+  console.log(`Express Server is running on port ${port}`);
 }); 

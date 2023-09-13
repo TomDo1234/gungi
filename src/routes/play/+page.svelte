@@ -41,6 +41,8 @@
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
 	import type { BoardState, Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
+	import io from "socket.io-client";
+	import { PUBLIC_WS_ENDPOINT } from '$env/static/public';
 
 	let player_name: string | null = null;
 	let player_color: 'white' | 'black' = 'white';
@@ -92,6 +94,8 @@
 			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece,board_state);
 		}
 	}
+
+	const socket = io(PUBLIC_WS_ENDPOINT);
 </script>
 
 <style lang="postcss">
