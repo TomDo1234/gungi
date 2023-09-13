@@ -4,7 +4,13 @@ import { Server } from 'socket.io';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server,{
+  cors: {
+    origin: "http://localhost",
+    methods: ["GET", "POST"]
+  }
+});
+
 const game_io = io.of('/game_ws');
 const port = 5000;
 
