@@ -25,7 +25,7 @@
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between">
 				<h4>{player.name}'s stockpile</h4>
-				<h4>Army Size: ({army_count(board_state,player.color)} / 26)</h4>
+				<h4>Army Size: ({army_count(board_state, player.color)} / 26)</h4>
 			</div>
 			<div
 				class="grid grid-cols-3 tablet:grid-cols-7 laptop:grid-cols-6 desktop:grid-cols-8 gap-4"
@@ -33,7 +33,7 @@
 					items: player.piece_data,
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
-					dragDisabled: i === 1 || army_count(board_state,player.color) >= 26
+					dragDisabled: i === 1 || army_count(board_state, player.color) >= 26
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
@@ -93,12 +93,20 @@
 	];
 
 	$: {
-		player_data[0].name = client_player_name ?? 'Anonymous (Player 1)'
+		player_data[0].name = client_player_name ?? 'Anonymous (Player 1)';
 	}
 
-	function army_count(board_state: BoardState,color: 'white' | 'black'): number {
+	function army_count(board_state: BoardState, color: 'white' | 'black'): number {
 		//Essentially, count the pieces of the same color in the entire board in all stacks
-		return board_state.reduce((a,b) => a + b.reduce((count,square) => count + square.pieces.filter(piece => piece.color === color).length,0),0)
+		return board_state.reduce(
+			(a, b) =>
+				a +
+				b.reduce(
+					(count, square) => count + square.pieces.filter((piece) => piece.color === color).length,
+					0
+				),
+			0
+		);
 	}
 
 	function handleConsider(e: CustomEvent, player_number: number) {
@@ -121,7 +129,17 @@
 		player_data[player_number].piece_data = updated_player_data;
 	}
 
-	function handleFinalize() {
+	function handleFinalize(e: CustomEvent) {
+		const { items: detailItems, info }: { items: Item[]; info: DndEventInfo } = e.detail;
+		if (info.trigger !== TRIGGERS.DROPPED_INTO_ANOTHER) {
+			const dragged_item_index = detailItems.findIndex(
+				(item) => item.id === currently_dragged_stockpile_piece.id
+			);
+			console.log(dragged_item_index)
+			const player_piece_data = player_data[0].piece_data
+			player_piece_data[dragged_item_index].amount +=  1;
+			player_data[0].piece_data = player_piece_data;
+		}
 		currently_dragged_stockpile_piece = null;
 	}
 </script>
