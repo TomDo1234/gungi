@@ -69,10 +69,11 @@
 	export let tower_details: Piece[];
 	export let board_state: BoardState;
 	export let currently_dragged_stockpile_piece: Piece | null;
+	export let client_player_name: string | null = null;
 
 	const player_data: PlayerData[] = [
 		{
-			name: 'Player 1',
+			name: 'Anonymous (Player 1)',
 			color: 'white',
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
 				piece.color = 'white';
@@ -80,7 +81,7 @@
 			})
 		},
 		{
-			name: 'Player 2',
+			name: 'Anonymous (Player 2)',
 			color: 'black',
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
 				piece.color = 'black';
@@ -88,6 +89,10 @@
 			})
 		}
 	];
+
+	$: {
+		player_data[0].name = client_player_name ?? 'Anonymous (Player 1)'
+	}
 
 	function army_count(board_state: BoardState,color: 'white' | 'black'): number {
 		//Essentially, count the pieces of the same color in the entire board in all stacks

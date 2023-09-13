@@ -25,16 +25,23 @@
 		<PiecesZone
 			tower_details={currently_hovered_tower_details}
 			{ board_state }
+			client_player_name={player_name}
 			bind:currently_dragged_stockpile_piece
 		/>
 	</div>
+	{#if player_name === null}
+		<PlayerNameModal />
+	{/if}
 </main>
 
 <script lang="ts">
+	import PlayerNameModal from './../../lib/components/PlayerNameModal.svelte';
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
 	import type { BoardState, Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
+
+	let player_name: string | null = null;
 
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j,pieces:[] }))
