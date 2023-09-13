@@ -33,7 +33,7 @@
 					items: player.piece_data,
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
-					dragDisabled: i === 1
+					dragDisabled: i === 1 || army_count(board_state,player.color) >= 26
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
