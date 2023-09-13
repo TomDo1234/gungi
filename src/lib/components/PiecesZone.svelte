@@ -25,7 +25,7 @@
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between">
 				<h4>{player.name}'s stockpile</h4>
-				<h4>Army Size: {army_count(board_state,player.color)}</h4>
+				<h4>Army Size: ({army_count(board_state,player.color)} / 26)</h4>
 			</div>
 			<div
 				class="grid grid-cols-3 tablet:grid-cols-7 laptop:grid-cols-6 desktop:grid-cols-8 gap-4"

@@ -41,10 +41,20 @@
 	);
 
 	function update_board_state(e: CustomEvent) {
-		const { piece,square_number } = e.detail;
-		piece.id = square_number;
-		const square = board_state[Math.floor(square_number / 9)][square_number % 9]
-		square.pieces.unshift(piece);
+		const { piece,square_number,mode } = e.detail;
+		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
+		if (mode === 'add') {
+			piece.id = square_number;
+			const square = board_state[Math.floor(square_number / 9)][square_number % 9]
+			square.pieces.unshift(piece);
+		}
+		else if (currently_dragged_piece_position) { 
+			//position only not null and recorded when the piece was already on the board
+			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
+			const square = board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9]
+			square.pieces.shift();
+		}
+
 		board_state = board_state
 	}
 

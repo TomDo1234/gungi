@@ -37,8 +37,8 @@
 		dispatch('tower_details', { items });
 	}
 
-	function emitPieceInfo(piece: Piece) {
-		dispatch('dropped_piece_info', { piece, square_number });
+	function emitPieceInfo(piece: Piece,mode: 'add' | 'remove') {
+		dispatch('dropped_piece_info', { piece, square_number, mode });
 	}
 
 	function handleDnd(e: CustomEvent) {
@@ -54,7 +54,8 @@
 		} else if (info.trigger === TRIGGERS.DROPPED_INTO_ZONE) {
 			detailItems[0].position = square_number;
 			detailItems[0].current_level = detailItems.length;
-			emitPieceInfo(detailItems[0]);
+			emitPieceInfo(currently_dragged_board_piece as Piece,'remove')
+			emitPieceInfo(detailItems[0],'add');
 			currently_dragged_board_piece = null;
 		}
 
