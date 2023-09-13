@@ -52,8 +52,11 @@
 	</div>
 	{#each player_data as player, i}
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
-			<div class="flex justify-between">
+			<div class="flex justify-between items-center">
 				<h4>{player.name}'s stockpile</h4>
+				{#if stack_turn % 2 === (player.color === 'white' ? 1 : 0) && stack_turn <= 2}
+					<p class="text-purple-500 font-medium" >*Move your Marshal first</p>
+				{/if}
 				<h4>Army Size: ({army_count(board_state, player.color)} / 26)</h4>
 			</div>
 			<div
@@ -70,16 +73,16 @@
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
 			>
-				{#each player.piece_data as piece, i}
+				{#each player.piece_data as piece, j}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
-					{#key `${piece.id}|${i}|${player.color}`}
+					{#key `${piece.id}|${j}|${player.color}`}
 						<div
 							class="h-12 laptop:h-14 aspect-square relative
 							{piece.display_name !== 'Marshal (King)' && stack_turn <= 2 ? 'pointer-events-none' : ''}"
 							class:hidden={piece.amount <= 0}
 						>
 							<img
-								class="block"
+								class="block border-purple-600"
 								draggable="true"
 								src="/img/{player.color}-{piece_slug_name}-1.svg"
 								alt="{player.color}-{piece_slug_name}-1"
@@ -181,7 +184,7 @@
 		} else {
 			stack_turn += 1;
 			turn += players_ready ? 1 : 0;
-			socket.emit("send_data_after_turn",board_state);
+			socket.emit('send_data_after_turn', board_state);
 		}
 		currently_dragged_stockpile_piece = null;
 	}
