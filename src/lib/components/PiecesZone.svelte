@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-y-6">
 	<h2 class="font-bold text-4xl">Game Phase</h2>
 	<div class="flex flex-col justify-between rounded-3xl bg-lime-950 text-white py-5 px-8">
-		<h4>Tower details</h4>
+		<h4>Tower details {players_ready ? `(Turn ${turn})` : ''}</h4>
 		<div class="flex flex-wrap justify-around">
 			{#each { length: 3 } as _, i}
 				{@const piece = tower_details[i]}
@@ -70,7 +70,9 @@
 	export let board_state: BoardState;
 	export let currently_dragged_stockpile_piece: Piece | null;
 	export let client_player_name: string | null = null;
+	export let turn: number;
 
+	let players_ready = false;
 	const player_data: PlayerData[] = [
 		{
 			name: 'Anonymous (Player 1)',

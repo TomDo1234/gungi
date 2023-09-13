@@ -12,7 +12,7 @@
 					{#key square_number}
 						<Square
 							{square_number}
-							{ square_is_valid_move }
+							square_is_valid_move={square_is_valid_move && turn % 2 === (player_color === 'white' ? 1 : 0)}
 							on:tower_details={showTowerDetails}
 							on:mouseleave={clearTowerDetails}
 							on:dropped_piece_info={update_board_state}
@@ -25,6 +25,7 @@
 		<PiecesZone
 			tower_details={currently_hovered_tower_details}
 			{ board_state }
+			{ turn }
 			client_player_name={player_name}
 			bind:currently_dragged_stockpile_piece
 		/>
@@ -40,6 +41,9 @@
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 
 	let player_name: string | null = null;
+	let player_color: 'white' | 'black' = 'white';
+	let stack_turn = 1;
+	let turn = 1;
 
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j,pieces:[] }))
@@ -58,6 +62,7 @@
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
 			const square = board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9]
 			square.pieces.shift();
+			turn += 1;
 		}
 
 		board_state = board_state
