@@ -29,9 +29,7 @@
 			bind:currently_dragged_stockpile_piece
 		/>
 	</div>
-	{#if player_name === null}
-		<PlayerNameModal />
-	{/if}
+	<PlayerNameModal on:submit={(e) => player_name = e.detail.name} />
 </main>
 
 <script lang="ts">
