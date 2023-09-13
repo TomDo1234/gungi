@@ -21,7 +21,7 @@
 			</div>
 		{/each}
 	</div>
-	<PiecesZone tower_details={[]} bind:currently_dragged_stockpile_piece />
+	<PiecesZone tower_details={[]} bind:currently_dragged_stockpile_piece stack_turn={0} turn={0} board_state={[]} />
 </div>
 
 <script lang="ts">

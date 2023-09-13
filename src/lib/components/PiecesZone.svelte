@@ -167,7 +167,6 @@
 			const dragged_item_index = detailItems.findIndex(
 				(item) => item.id === currently_dragged_stockpile_piece?.id
 			);
-			console.log(dragged_item_index);
 			const player_piece_data = player_data[0].piece_data;
 			player_piece_data[dragged_item_index].amount += 1;
 			player_data[0].piece_data = player_piece_data;
