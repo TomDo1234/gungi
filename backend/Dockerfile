@@ -9,5 +9,4 @@ COPY package.json .
 RUN yarn install
 COPY . .
 RUN yarn build
-ENV PORT=5000
-CMD [ "node","build" ]
+CMD [ "yarn","run","start" ]

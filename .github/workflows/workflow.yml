@@ -37,6 +37,9 @@ jobs:
       run: |
         docker build . -t 567364279564.dkr.ecr.us-east-1.amazonaws.com/gungi
         docker push 567364279564.dkr.ecr.us-east-1.amazonaws.com/gungi
+        cd backend
+        docker build . -t 567364279564.dkr.ecr.us-east-1.amazonaws.com/gungi-be
+        docker push 567364279564.dkr.ecr.us-east-1.amazonaws.com/gungi-be
 
     - name: ECS Deploy
       run: |
