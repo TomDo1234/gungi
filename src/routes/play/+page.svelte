@@ -12,7 +12,8 @@
 					{#key square_number}
 						<Square
 							{square_number}
-							square_is_valid_move={square_is_valid_move && turn % 2 === (player_color === 'white' ? 1 : 0)}
+							square_is_valid_move={ square_is_valid_move }
+							is_client_turn={turn % 2 === (player_color === 'white' ? 1 : 0)}
 							on:tower_details={showTowerDetails}
 							on:mouseleave={clearTowerDetails}
 							on:dropped_piece_info={update_board_state}

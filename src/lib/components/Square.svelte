@@ -29,6 +29,7 @@
 	export let square_number: number; //Square number
 	export let square_is_valid_move = false;
 	export let currently_dragged_board_piece: Piece | null;
+	export let is_client_turn: boolean;
 
 	let items: Piece[] = [];
 	const dispatch = createEventDispatcher();
@@ -67,6 +68,7 @@
 		morphDisabled: true,
 		dropFromOthersDisabled: items.length >= 3 || !square_is_valid_move,
 		dropTargetClasses: ['border-purple-600'],
-		dropTargetStyle: {}
+		dropTargetStyle: {},
+		dragDisabled: !is_client_turn
 	};
 </script>
