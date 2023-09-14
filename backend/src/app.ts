@@ -1,6 +1,6 @@
 import express from 'express';
 import { createServer } from 'node:http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import type { GameState } from './types';
 import { check_legality } from './logic';
 
@@ -20,20 +20,21 @@ app.get('/', ( _, res) => {
   res.send('Healthy');
 });
 
-const players = [];
+const players: string[] = [];
 let previous_game_state: null | GameState = null;
-game_io.on('connection', (socket) => {
+
+game_io.on('connection', (socket: Socket) => {
   console.log('a user connected');
 
   socket.join('room'); //one and only room for now
-  players.push(socket)
 
+  game_io.emit("joined_room",{color: players.includes(socket.id) ? 'black' : 'white',socket_id: socket.id});
+  players.push(socket.id)
   socket.on('send_data_after_turn',(message) => {
     if (!check_legality(previous_game_state,message)) {
       return;
     }
     previous_game_state = message;
-    console.log(message);
     game_io.emit('received_data_after_turn',message)
   })
 });

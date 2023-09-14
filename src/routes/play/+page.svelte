@@ -46,7 +46,7 @@
 	import { socket } from '$lib/ws';
 
 	let player_name: string | null = null;
-	let player_color: 'white' | 'black' = 'white';
+	let player_color: 'white' | 'black' | null = null;
 	let stack_turn = 1;
 	let turn = 1;
 	let players_ready = false;
@@ -54,6 +54,25 @@
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
+
+	socket.on('connect',() => {
+		socket.on('joined_room',(message) => {
+			if (message.socket_id === socket.id) {
+				player_color = message.color;
+				console.log(player_color)
+			}
+		})
+
+		socket.on('received_data_after_turn',(message: SocketPayload) => {
+			if (players_ready && message.turn % 2 === (player_color === 'white' ? 1 : 0)) {
+				return;
+			}
+			if (!players_ready && message.stack_turn % 2 === (player_color === 'white' ? 1 : 0)) {
+				return;
+			}
+			board_state = message.board_state
+		})
+	});
 
 	function update_board_state(e: CustomEvent) {
 		const { piece, square_number, mode } = e.detail;
@@ -71,7 +90,7 @@
 				];
 			square.pieces.shift();
 			turn += 1;
-			socket.emit("send_data_after_turn",board_state);
+			socket.emit("send_data_after_turn",{board_state, turn, stack_turn});
 		}
 
 		board_state = board_state;
