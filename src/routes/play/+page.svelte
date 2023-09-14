@@ -29,6 +29,7 @@
 			{board_state}
 			{turn}
 			client_player_name={player_name}
+			client_player_color={player_color}
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
 			bind:players_ready
