@@ -6,10 +6,10 @@
 	>
 		<div class="grid grid-cols-9 h-fit w-full tablet:w-[unset]">
 			{#each board_state as row, i}
-				{#each row as _, j}
+				{#each row as square, j}
 					{@const square_number = 9 * i + j}
 					{@const square_is_valid_move = available_moves.includes(square_number)}
-					{#key square_number}
+					{#key `${square.id}`}
 						<Square
 							{square_number}
 							{square_is_valid_move}
@@ -42,7 +42,7 @@
 	import PlayerNameModal from './../../lib/components/PlayerNameModal.svelte';
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
-	import type { BoardState, Piece } from '$lib/pieces';
+	import type { BoardState,Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 	import { socket } from '$lib/ws';
 	import { onMount } from 'svelte';
@@ -76,10 +76,8 @@
 		})
 		
 		socket.on('joined_room',(message) => {
-			console.log(message,socket.id)
 			if (message.socket_id === socket.id) {
 				player_color = message.color;
-				console.log(player_color)
 			}
 		})
 
@@ -90,7 +88,11 @@
 			if (!players_ready && message.stack_turn % 2 === (player_color === 'white' ? 1 : 0)) {
 				return;
 			}
+			turn = message.turn;
+			stack_turn = message.stack_turn;
+			console.log(stack_turn)
 			board_state = message.board_state
+			console.log(board_state)
 		})
 	});
 

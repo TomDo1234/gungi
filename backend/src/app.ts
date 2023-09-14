@@ -38,11 +38,12 @@ game_io.on('connection', (socket: Socket) => {
 
   socket.on('join_game',(message) => {  
     if (message.token in players) {
-      game_io.to('room').emit("joined_room",{color: players[message.token]?.player_color,socket_id: socket.id});
+      console.log(message.token)
+      game_io.emit("joined_room",{color: players[message.token]?.player_color,socket_id: socket.id});
       return;
     }
-
-    const color = Object.keys(players).length > 0 ? 'black' : 'white';
+    const player_list = Object.keys(players);
+    const color = (player_list.length > 1 && player_list[0] !== message.token) ? 'black' : 'white';
     game_io.to('room').emit("joined_room",{color , socket_id: socket.id});
     players[message.token] = {player_color: color};
   })
