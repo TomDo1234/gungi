@@ -28,14 +28,19 @@ game_io.on('connection', (socket: Socket) => {
 
   socket.join('room'); //one and only room for now
 
-  game_io.emit("joined_room",{color: players.includes(socket.id) ? 'black' : 'white',socket_id: socket.id});
-  players.push(socket.id)
+  socket.emit('get_token',{token: 'asd'})
+
+  socket.on('join_game',() => {
+    game_io.to('room').emit("joined_room",{color: players.includes(socket.id) ? 'black' : 'white',socket_id: socket.id});
+    players.push(socket.id)
+  })
+
   socket.on('send_data_after_turn',(message) => {
     if (!check_legality(previous_game_state,message)) {
       return;
     }
     previous_game_state = message;
-    game_io.emit('received_data_after_turn',message)
+    game_io.to('room').emit('received_data_after_turn',message)
   })
 });
 

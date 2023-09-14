@@ -50,12 +50,17 @@
 	let stack_turn = 1;
 	let turn = 1;
 	let players_ready = false;
+	let access_token: string | null = null;
 
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
 
 	socket.on('connect',() => {
+		socket.on('get_token',(message) => {
+			access_token = message.token
+		})
+		
 		socket.on('joined_room',(message) => {
 			if (message.socket_id === socket.id) {
 				player_color = message.color;
