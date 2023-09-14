@@ -120,7 +120,7 @@
 	$: player_data = [
 		{
 			name: client_player_name ?? 'Anonymous (Player 1)',
-			color: client_player_color,
+			color: client_player_color ?? 'white',
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
 				piece.color = client_player_color ?? 'white';
 				return piece;
@@ -128,9 +128,9 @@
 		},
 		{
 			name: 'Anonymous (Player 2)',
-			color: opponent_color,
+			color: opponent_color ?? 'black',
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
-				piece.color = opponent_color;
+				piece.color = opponent_color ?? 'black';
 				return piece;
 			})
 		}
