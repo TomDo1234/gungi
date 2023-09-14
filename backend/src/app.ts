@@ -14,7 +14,7 @@ const io = new Server(server,{
 });
 
 const game_io = io.of('/game_ws');
-const port = 5000;
+const port = 8080;
 
 app.get('/', ( _, res) => {
   res.send('Healthy');
