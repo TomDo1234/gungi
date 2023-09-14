@@ -20,7 +20,7 @@ services:
       - ./backend/:/usr/app/
       - gungi_be_modules:/usr/app/node_modules
     ports:
-      - 5000:5000
+      - 8080:8080
 volumes:
   gungi_fe_modules:
   gungi_be_modules:
