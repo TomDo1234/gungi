@@ -9,11 +9,12 @@
 				{#each row as square, j}
 					{@const square_number = 9 * i + j}
 					{@const square_is_valid_move = available_moves.includes(square_number)}
-					{#key `${square.id}`}
+					{#key `${square.id}|${JSON.stringify(square.pieces?.[0])}` }
 						<Square
 							{square_number}
 							{square_is_valid_move}
 							is_client_turn={turn % 2 === (player_color === 'white' ? 1 : 0)}
+							items={square.pieces}
 							on:tower_details={showTowerDetails}
 							on:mouseleave={clearTowerDetails}
 							on:dropped_piece_info={update_board_state}

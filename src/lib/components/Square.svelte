@@ -32,7 +32,7 @@
 	export let is_client_turn: boolean;
 	export let players_ready: boolean;
 
-	let items: Piece[] = [];
+	export let items: Piece[];
 	const dispatch = createEventDispatcher();
 
 	function emitStackInfo() {
