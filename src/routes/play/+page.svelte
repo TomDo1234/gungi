@@ -29,6 +29,7 @@
 			{board_state}
 			{turn}
 			client_player_name={player_name}
+			client_player_color={player_color}
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
 			bind:players_ready
@@ -44,6 +45,7 @@
 	import type { BoardState, Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 	import { socket } from '$lib/ws';
+	import { onMount } from 'svelte';
 
 	let player_name: string | null = null;
 	let player_color: 'white' | 'black' | null = null;
@@ -52,16 +54,29 @@
 	let players_ready = false;
 	let access_token: string | null = null;
 
+	onMount(() => {
+		access_token = localStorage.getItem('gungi_token')
+	})
+
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
 
 	socket.on('connect',() => {
+		socket.emit('send_token',{token: access_token});
+
+		if (access_token) {
+			socket.emit('join_game',{ token: access_token })
+		}
+
 		socket.on('get_token',(message) => {
+			localStorage.setItem('gungi_token',message.token);
 			access_token = message.token
+			socket.emit('join_game',{ token: access_token })
 		})
 		
 		socket.on('joined_room',(message) => {
+			console.log(message,socket.id)
 			if (message.socket_id === socket.id) {
 				player_color = message.color;
 				console.log(player_color)

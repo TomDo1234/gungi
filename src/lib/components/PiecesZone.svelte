@@ -68,7 +68,7 @@
 					dragDisabled:
 						i === 1 ||
 						army_count(board_state, player.color) >= 26 ||
-						stack_turn % 2 !== (player_data[0].color === 'white' ? 1 : 0)
+						stack_turn % 2 === (player_data[0].color === 'white' ? 1 : 0)
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
@@ -110,32 +110,31 @@
 	export let board_state: BoardState;
 	export let currently_dragged_stockpile_piece: Piece | null;
 	export let client_player_name: string | null = null;
+	export let client_player_color: 'white' | 'black' | null;
 	export let turn: number;
 	export let stack_turn: number;
 	export let players_ready: boolean;
 
-	const player_data: PlayerData[] = [
+	$: opponent_color = (client_player_color === 'white' ? 'black' : 'white') as 'white' | 'black'
+
+	$: player_data = [
 		{
-			name: 'Anonymous (Player 1)',
-			color: 'white',
+			name: client_player_name ?? 'Anonymous (Player 1)',
+			color: client_player_color,
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
-				piece.color = 'white';
+				piece.color = client_player_color ?? 'white';
 				return piece;
 			})
 		},
 		{
 			name: 'Anonymous (Player 2)',
-			color: 'black',
+			color: opponent_color,
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
-				piece.color = 'black';
+				piece.color = opponent_color;
 				return piece;
 			})
 		}
-	];
-
-	$: {
-		player_data[0].name = client_player_name ?? 'Anonymous (Player 1)';
-	}
+	] as PlayerData[];
 
 	function army_count(board_state: BoardState, color: 'white' | 'black'): number {
 		//Essentially, count the pieces of the same color in the entire board in all stacks
