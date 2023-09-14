@@ -38,7 +38,6 @@ game_io.on('connection', (socket: Socket) => {
 
   socket.on('join_game',(message) => {  
     if (message.token in players) {
-      console.log(message.token)
       game_io.emit("joined_room",{color: players[message.token]?.player_color,socket_id: socket.id});
       return;
     }
