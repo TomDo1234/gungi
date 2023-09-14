@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'node:http';
 import { Server, Socket } from 'socket.io';
 import type { GameState } from './types';
-import { check_legality } from './logic';
+import { check_legality, generate_token } from './logic';
 
 const app = express();
 const server = createServer(app);
@@ -20,19 +20,31 @@ app.get('/', ( _, res) => {
   res.send('Healthy');
 });
 
-const players: string[] = [];
+const players: Record<string,{player_color: 'white' | 'black'}> = {};
 let previous_game_state: null | GameState = null;
 
 game_io.on('connection', (socket: Socket) => {
   console.log('a user connected');
 
   socket.join('room'); //one and only room for now
+  
+  socket.on('send_token',({token}) => {
+    if (token in players) {
+      return;
+    }
+    const new_token = generate_token();
+    socket.emit('get_token',{ token: new_token })
+  })
 
-  socket.emit('get_token',{token: 'asd'})
+  socket.on('join_game',(message) => {  
+    if (message.token in players) {
+      game_io.to('room').emit("joined_room",{color: players[message.token]?.player_color,socket_id: socket.id});
+      return;
+    }
 
-  socket.on('join_game',() => {
-    game_io.to('room').emit("joined_room",{color: players.includes(socket.id) ? 'black' : 'white',socket_id: socket.id});
-    players.push(socket.id)
+    const color = Object.keys(players).length > 0 ? 'black' : 'white';
+    game_io.to('room').emit("joined_room",{color , socket_id: socket.id});
+    players[message.token] = {player_color: color};
   })
 
   socket.on('send_data_after_turn',(message) => {
