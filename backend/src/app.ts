@@ -2,7 +2,7 @@ import express from 'express';
 import { createServer } from 'node:http';
 import { Server, Socket } from 'socket.io';
 import type { GameState } from './types';
-import { check_legality, generate_token } from './logic';
+import { check_legality, flip_board, generate_token } from './logic';
 
 const app = express();
 const server = createServer(app);
@@ -52,7 +52,9 @@ game_io.on('connection', (socket: Socket) => {
       return;
     }
     previous_game_state = message;
-    game_io.to('room').emit('received_data_after_turn',message)
+    message.board_state = flip_board(message.board_state)
+    game_io.to('room').emit('received_data_after_turn',message) //flip board because the players have mirrored views, their color is always towards the bottom
+    //of their screens
   })
 });
 
