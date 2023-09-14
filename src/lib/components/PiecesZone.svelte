@@ -184,7 +184,7 @@
 		} else {
 			stack_turn += 1;
 			turn += players_ready ? 1 : 0;
-			socket.emit('send_data_after_turn', board_state);
+			socket.emit('send_data_after_turn', {board_state,turn,stack_turn});
 		}
 		currently_dragged_stockpile_piece = null;
 	}
