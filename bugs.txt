@@ -1,3 +1,3 @@
-1. When you drag and drop in the same place the websocket fires and the board gets flipped for no reason
+1. When you drag and drop in the same place the websocket fires and the board gets flipped for no reason, or even when you drag and move on the board itself (not stockpile)
 2. Game state needs to load when the user rejoins
 3. Player name needs to load for both people
