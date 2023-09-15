@@ -37,9 +37,10 @@
 			bind:player_ready
 			bind:other_player_ready
 			bind:other_player_name
+			{ game_id }
 		/>
 	</div>
-	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name})}} />
+	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
 </main>
 
 <script lang="ts">
@@ -50,6 +51,7 @@
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 	import { socket } from '$lib/ws';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	let player_name: string | null = null;
 	let other_player_name: string | null = null;
@@ -60,6 +62,7 @@
 	let other_player_ready = false;
 	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
+	$: game_id = $page.url.searchParams.get('game_id');
 
 	onMount(() => {
 		access_token = localStorage.getItem('gungi_token')
@@ -73,7 +76,7 @@
 		socket.emit('send_token',{token: access_token});
 
 		if (access_token) {
-			socket.emit('join_game',{ token: access_token })
+			socket.emit('join_game',{ token: access_token,game_id })
 		}
 
 		socket.on('get_token',(message) => {
@@ -124,7 +127,7 @@
 			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
 			stack_turn += 1;
 			turn += players_ready ? 1 : 0;
-			socket.emit("send_data_after_turn",{board_state, turn, stack_turn});
+			socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
 		} else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
