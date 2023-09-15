@@ -34,6 +34,8 @@
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
 			bind:players_ready
+			bind:player_ready
+			bind:other_player_ready
 			bind:other_player_name
 		/>
 	</div>
@@ -54,7 +56,9 @@
 	let player_color: 'white' | 'black' | null = null;
 	let stack_turn = 1;
 	let turn = 1;
-	let players_ready = false;
+	let player_ready = false;
+	let other_player_ready = false;
+	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
 
 	onMount(() => {
@@ -80,13 +84,19 @@
 		
 		socket.on('joined_room',(message) => {
 			if (message.socket_id === socket.id) {
-				player_color = message.color;
+				player_color = message.player_data.player_color;
 			}
 		})
 
 		socket.on("other_player_declare_name",(message) => {
 			if (message.socket_id !== socket.id) {
 				other_player_name = message.name;
+			}
+		})
+
+		socket.on("other_player_ready",(message) => {
+			if (message.socket_id !== socket.id) {
+				other_player_ready = message.ready;
 			}
 		})
 

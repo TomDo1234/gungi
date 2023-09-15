@@ -21,7 +21,7 @@
 				<div class="flex-1 flex justify-center">
 					<button
 						class="rounded-2xl px-6 py-3 bg-dark-blue"
-						on:click={players_ready ? forfeit : () => (players_ready = true)}
+						on:click={players_ready ? forfeit : ready_player}
 					>
 						{players_ready ? 'FORFEIT' : 'READY'}
 					</button>
@@ -104,6 +104,7 @@
 	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
 	import { piece_data, type Piece, type BoardState } from '$lib/pieces';
+	import { socket } from '$lib/ws';
 
 	export let tower_details: Piece[];
 	export let board_state: BoardState;
@@ -114,6 +115,8 @@
 	export let turn: number;
 	export let stack_turn: number;
 	export let players_ready: boolean;
+	export let player_ready: boolean;
+	export let other_player_ready: boolean;
 
 	$: opponent_color = (client_player_color === 'white' ? 'black' : 'white') as 'white' | 'black'
 
@@ -150,6 +153,11 @@
 	}
 
 	function forfeit() {}
+
+	function ready_player() {
+		player_ready = true;
+		socket.emit("player_ready",{ready: true});
+	}
 
 	function handleConsider(e: CustomEvent, player_number: number) {
 		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);
