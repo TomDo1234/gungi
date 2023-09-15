@@ -83,17 +83,15 @@
 		})
 
 		socket.on('received_data_after_turn',(message: SocketPayload) => {
-			if (players_ready && message.turn % 2 === (player_color === 'white' ? 1 : 0)) {
+			if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 				return;
 			}
-			if (!players_ready && message.stack_turn % 2 === (player_color === 'white' ? 1 : 0)) {
+			if (!players_ready && message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0)) {
 				return;
 			}
 			turn = message.turn;
 			stack_turn = message.stack_turn;
-			console.log(stack_turn)
 			board_state = message.board_state
-			console.log(board_state)
 		})
 	});
 
@@ -102,16 +100,11 @@
 		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
 		if (mode === 'add') {
 			piece.id = square_number;
-			const square = board_state[Math.floor(square_number / 9)][square_number % 9];
-			square.pieces.unshift(piece);
+			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
 		} else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
-			const square =
-				board_state[Math.floor(currently_dragged_piece_position / 9)][
-					currently_dragged_piece_position % 9
-				];
-			square.pieces.shift();
+			board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9].pieces.shift();
 			turn += 1;
 			socket.emit("send_data_after_turn",{board_state, turn, stack_turn});
 		}
