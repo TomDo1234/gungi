@@ -34,9 +34,10 @@
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
 			bind:players_ready
+			bind:other_player_name
 		/>
 	</div>
-	<PlayerNameModal on:submit={(e) => (player_name = e.detail.name)} />
+	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name})}} />
 </main>
 
 <script lang="ts">
@@ -49,6 +50,7 @@
 	import { onMount } from 'svelte';
 
 	let player_name: string | null = null;
+	let other_player_name: string | null = null;
 	let player_color: 'white' | 'black' | null = null;
 	let stack_turn = 1;
 	let turn = 1;
@@ -79,6 +81,12 @@
 		socket.on('joined_room',(message) => {
 			if (message.socket_id === socket.id) {
 				player_color = message.color;
+			}
+		})
+
+		socket.on("other_player_declare_name",(message) => {
+			if (message.socket_id !== socket.id) {
+				other_player_name = message.name;
 			}
 		})
 

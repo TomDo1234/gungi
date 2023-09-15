@@ -104,12 +104,12 @@
 	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
 	import { piece_data, type Piece, type BoardState } from '$lib/pieces';
-	import { socket } from '$lib/ws';
 
 	export let tower_details: Piece[];
 	export let board_state: BoardState;
 	export let currently_dragged_stockpile_piece: Piece | null;
 	export let client_player_name: string | null = null;
+	export let other_player_name: string | null = null;
 	export let client_player_color: 'white' | 'black' | null;
 	export let turn: number;
 	export let stack_turn: number;
@@ -127,7 +127,7 @@
 			})
 		},
 		{
-			name: 'Anonymous (Player 2)',
+			name: other_player_name ?? 'Anonymous (Player 2)',
 			color: opponent_color ?? 'black',
 			piece_data: structuredClone(piece_data).map((piece: Piece) => {
 				piece.color = opponent_color ?? 'black';
@@ -181,7 +181,7 @@
 			player_piece_data[dragged_item_index].amount += 1;
 			player_data[0].piece_data = player_piece_data;
 		} 
-		
+
 		currently_dragged_stockpile_piece = null;
 	}
 </script>

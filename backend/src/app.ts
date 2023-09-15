@@ -20,7 +20,7 @@ app.get('/', ( _, res) => {
   res.send('Healthy');
 });
 
-const players: Record<string,{player_color: 'white' | 'black'}> = {};
+const players: Record<string,{player_color: 'white' | 'black',name: string | null}> = {};
 let previous_game_state: null | GameState = null;
 
 game_io.on('connection', (socket: Socket) => {
@@ -44,7 +44,14 @@ game_io.on('connection', (socket: Socket) => {
     const player_list = Object.keys(players);
     const color = (player_list.length > 1 && player_list[0] !== message.token) ? 'black' : 'white';
     game_io.to('room').emit("joined_room",{color , socket_id: socket.id});
-    players[message.token] = {player_color: color};
+    players[message.token] = {player_color: color, name: null};
+  })
+
+  socket.on('declare_name',(message) => {
+    game_io.to('room').emit("other_player_declare_name",{name: message.name,socket_id: socket.id})
+    if (message.token in players) {
+      players[message.token].name = message.name;
+    }
   })
 
   socket.on('send_data_after_turn',(message) => {
