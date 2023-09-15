@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
-import { GameState } from "./types";
+import { BoardState, GameState } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function check_legality(prev_state: GameState | null,current_state: GameState) {
+export function check_legality(prev_state: GameState | null, current_state: GameState) {
     if (prev_state === null) {
         return true
     }
@@ -19,3 +19,28 @@ export function generate_token() {
     }
     return token;
 }
+
+export function flip_board(board: BoardState): BoardState {
+    console.log(board)
+    const numRows = 9;
+    const numCols = 9;
+
+    const flippedBoard = [];
+
+    for (let i = numRows - 1; i >= 0; i--) {
+        const newRow = [];
+        for (let j = numCols - 1; j >= 0; j--) {
+            const square = board[i][j]
+            square.id = (8 - i) * 9 + 8 - j
+            newRow.push(square);
+        }
+        flippedBoard.push(newRow);
+    }
+
+    return flippedBoard;
+}
+
+
+
+
+

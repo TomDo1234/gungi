@@ -34,9 +34,13 @@
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
 			bind:players_ready
+			bind:player_ready
+			bind:other_player_ready
+			bind:other_player_name
+			{ game_id }
 		/>
 	</div>
-	<PlayerNameModal on:submit={(e) => (player_name = e.detail.name)} />
+	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
 </main>
 
 <script lang="ts">
@@ -47,13 +51,18 @@
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 	import { socket } from '$lib/ws';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	let player_name: string | null = null;
+	let other_player_name: string | null = null;
 	let player_color: 'white' | 'black' | null = null;
 	let stack_turn = 1;
 	let turn = 1;
-	let players_ready = false;
+	let player_ready = false;
+	let other_player_ready = false;
+	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
+	$: game_id = $page.url.searchParams.get('game_id');
 
 	onMount(() => {
 		access_token = localStorage.getItem('gungi_token')
@@ -67,7 +76,7 @@
 		socket.emit('send_token',{token: access_token});
 
 		if (access_token) {
-			socket.emit('join_game',{ token: access_token })
+			socket.emit('join_game',{ token: access_token,game_id })
 		}
 
 		socket.on('get_token',(message) => {
@@ -78,22 +87,35 @@
 		
 		socket.on('joined_room',(message) => {
 			if (message.socket_id === socket.id) {
-				player_color = message.color;
+				player_color = message.player_data.player_color;
+			}
+		})
+
+		socket.on("other_player_declare_name",(message) => {
+			if (message.socket_id !== socket.id) {
+				other_player_name = message.name;
+			}
+		})
+
+		socket.on("other_player_ready",(message) => {
+			if (message.socket_id !== socket.id) {
+				other_player_ready = message.ready;
 			}
 		})
 
 		socket.on('received_data_after_turn',(message: SocketPayload) => {
-			if (players_ready && message.turn % 2 === (player_color === 'white' ? 1 : 0)) {
+			if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 				return;
 			}
-			if (!players_ready && message.stack_turn % 2 === (player_color === 'white' ? 1 : 0)) {
+			if (!players_ready && message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0)) {
+				return;
+			}
+			if (!players_ready && other_player_ready) {
 				return;
 			}
 			turn = message.turn;
 			stack_turn = message.stack_turn;
-			console.log(stack_turn)
 			board_state = message.board_state
-			console.log(board_state)
 		})
 	});
 
@@ -102,18 +124,14 @@
 		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
 		if (mode === 'add') {
 			piece.id = square_number;
-			const square = board_state[Math.floor(square_number / 9)][square_number % 9];
-			square.pieces.unshift(piece);
+			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
+			stack_turn += 1;
+			turn += players_ready ? 1 : 0;
+			socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
 		} else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
-			const square =
-				board_state[Math.floor(currently_dragged_piece_position / 9)][
-					currently_dragged_piece_position % 9
-				];
-			square.pieces.shift();
-			turn += 1;
-			socket.emit("send_data_after_turn",{board_state, turn, stack_turn});
+			board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9].pieces.shift();
 		}
 
 		board_state = board_state;
