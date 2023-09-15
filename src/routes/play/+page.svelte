@@ -105,10 +105,11 @@
 		})
 
 		socket.on('received_data_after_turn',(message: SocketPayload) => {
+			console.log(players_ready,player_ready,other_player_ready)
 			if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 				return;
 			}
-			if (!players_ready && message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0)) {
+			if (!players_ready && !player_ready && (message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0))) {
 				return;
 			}
 			if (!players_ready && other_player_ready) {
