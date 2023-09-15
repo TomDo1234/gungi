@@ -83,6 +83,7 @@
 		})
 
 		socket.on('received_data_after_turn',(message: SocketPayload) => {
+			console.log(player_color,message.stack_turn,!players_ready && message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0))
 			if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 				return;
 			}
@@ -101,12 +102,13 @@
 		if (mode === 'add') {
 			piece.id = square_number;
 			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
+			stack_turn += 1;
+			turn += players_ready ? 1 : 0;
+			socket.emit("send_data_after_turn",{board_state, turn, stack_turn});
 		} else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
 			board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9].pieces.shift();
-			turn += 1;
-			socket.emit("send_data_after_turn",{board_state, turn, stack_turn});
 		}
 
 		board_state = board_state;

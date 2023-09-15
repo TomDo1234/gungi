@@ -180,11 +180,8 @@
 			const player_piece_data = player_data[0].piece_data;
 			player_piece_data[dragged_item_index].amount += 1;
 			player_data[0].piece_data = player_piece_data;
-		} else {
-			stack_turn += 1;
-			turn += players_ready ? 1 : 0;
-			socket.emit('send_data_after_turn', {board_state,turn,stack_turn});
-		}
+		} 
+		
 		currently_dragged_stockpile_piece = null;
 	}
 </script>
