@@ -51,7 +51,7 @@
 	import { availableMoves, availableStockpileMoves } from '$lib/game';
 	import { socket } from '$lib/ws';
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
+	import type { PageData } from './$types';
 
 	let player_name: string | null = null;
 	let other_player_name: string | null = null;
@@ -62,7 +62,8 @@
 	let other_player_ready = false;
 	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
-	$: game_id = $page.url.searchParams.get('game_id');
+	export let data: PageData;
+	const { game_id } = data;
 
 	onMount(() => {
 		access_token = localStorage.getItem('gungi_token')
@@ -73,7 +74,7 @@
 	);
 
 	socket.on('connect',() => {
-		socket.emit('send_token',{token: access_token});
+		socket.emit('send_token',{token: access_token,game_id});
 
 		if (access_token) {
 			socket.emit('join_game',{ token: access_token,game_id })
@@ -82,7 +83,7 @@
 		socket.on('get_token',(message) => {
 			localStorage.setItem('gungi_token',message.token);
 			access_token = message.token
-			socket.emit('join_game',{ token: access_token })
+			socket.emit('join_game',{ token: access_token,game_id })
 		})
 		
 		socket.on('joined_room',(message) => {

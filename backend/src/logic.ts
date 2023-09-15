@@ -21,7 +21,6 @@ export function generate_token() {
 }
 
 export function flip_board(board: BoardState): BoardState {
-    console.log(board)
     const numRows = 9;
     const numCols = 9;
 
