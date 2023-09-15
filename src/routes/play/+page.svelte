@@ -67,59 +67,59 @@
 
 	onMount(() => {
 		access_token = localStorage.getItem('gungi_token')
+		socket.on('connect',() => {
+			socket.emit('send_token',{token: access_token,game_id});
+	
+			if (access_token) {
+				socket.emit('join_game',{ token: access_token,game_id })
+			}
+	
+			socket.on('get_token',(message) => {
+				localStorage.setItem('gungi_token',message.token);
+				access_token = message.token
+				socket.emit('join_game',{ token: access_token,game_id })
+			})
+			
+			socket.on('joined_room',(message) => {
+				if (message.socket_id === socket.id) {
+					player_color = message.player_data.player_color;
+				}
+			})
+	
+			socket.on("other_player_declare_name",(message) => {
+				if (message.socket_id !== socket.id) {
+					other_player_name = message.name;
+				}
+			})
+	
+			socket.on("other_player_ready",(message) => {
+				if (message.socket_id !== socket.id) {
+					other_player_ready = message.ready;
+				}
+			})
+	
+			socket.on('received_data_after_turn',(message: SocketPayload) => {
+				console.log(players_ready,player_ready,other_player_ready)
+				if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
+					return;
+				}
+				if (!players_ready && !player_ready && (message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0))) {
+					return;
+				}
+				if (!players_ready && other_player_ready) {
+					return;
+				}
+				turn = message.turn;
+				stack_turn = message.stack_turn;
+				board_state = message.board_state
+			})
+		});
 	})
 
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
 
-	socket.on('connect',() => {
-		socket.emit('send_token',{token: access_token,game_id});
-
-		if (access_token) {
-			socket.emit('join_game',{ token: access_token,game_id })
-		}
-
-		socket.on('get_token',(message) => {
-			localStorage.setItem('gungi_token',message.token);
-			access_token = message.token
-			socket.emit('join_game',{ token: access_token,game_id })
-		})
-		
-		socket.on('joined_room',(message) => {
-			if (message.socket_id === socket.id) {
-				player_color = message.player_data.player_color;
-			}
-		})
-
-		socket.on("other_player_declare_name",(message) => {
-			if (message.socket_id !== socket.id) {
-				other_player_name = message.name;
-			}
-		})
-
-		socket.on("other_player_ready",(message) => {
-			if (message.socket_id !== socket.id) {
-				other_player_ready = message.ready;
-			}
-		})
-
-		socket.on('received_data_after_turn',(message: SocketPayload) => {
-			console.log(players_ready,player_ready,other_player_ready)
-			if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
-				return;
-			}
-			if (!players_ready && !player_ready && (message.stack_turn % 2 !== (player_color === 'black' ? 1 : 0))) {
-				return;
-			}
-			if (!players_ready && other_player_ready) {
-				return;
-			}
-			turn = message.turn;
-			stack_turn = message.stack_turn;
-			board_state = message.board_state
-		})
-	});
 
 	function update_board_state(e: CustomEvent) {
 		const { piece, square_number, mode } = e.detail;
