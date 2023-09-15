@@ -21,9 +21,9 @@
 				<div class="flex-1 flex justify-center">
 					<button
 						class="rounded-2xl px-6 py-3 bg-dark-blue"
-						on:click={players_ready ? forfeit : ready_player}
+						on:click={player_ready ? forfeit : ready_player}
 					>
-						{players_ready ? 'FORFEIT' : 'READY'}
+						{player_ready ? 'FORFEIT' : 'READY'}
 					</button>
 				</div>
 			{/if}
@@ -54,7 +54,7 @@
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between items-center">
 				<h4>{player.name}'s stockpile</h4>
-				{#if stack_turn % 2 === (player.color === 'white' ? 1 : 0) && stack_turn <= 2 && i === 0 }
+				{#if stack_turn % 2 === (player.color === 'black' ? 1 : 0) && stack_turn <= 2 && i === 0 }
 					<p class="text-purple-500 font-medium" >*Move your Marshal first</p>
 				{/if}
 				<h4>Army Size: ({army_count(board_state, player.color)} / 26)</h4>
