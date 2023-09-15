@@ -6,7 +6,7 @@
 		{#each player_data as player, i}
 			<div class="flex gap-x-4 items-center flex-1">
 				<h4
-					class="text-4xl font-bold {stack_turn % 2 === (player.color === 'white' ? 1 : 0) &&
+					class="text-4xl font-bold {stack_turn % 2 === (player.color === 'black' ? 1 : 0) &&
 						'text-purple-500'}"
 				>
 					{player.name}
