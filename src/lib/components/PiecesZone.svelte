@@ -5,10 +5,7 @@
 	<div class="flex justify-between">
 		{#each player_data as player, i}
 			<div class="flex gap-x-4 items-center flex-1">
-				<h4
-					class="text-4xl font-bold {stack_turn % 2 === (player.color === 'black' ? 1 : 0) &&
-						'text-purple-500'}"
-				>
+				<h4 class="text-4xl font-bold {can_stack(i, stack_turn) && 'text-purple-500'}">
 					{player.name}
 				</h4>
 				<img
@@ -20,7 +17,8 @@
 			{#if i === 0}
 				<div class="flex-1 flex justify-center">
 					<button
-						class="rounded-2xl px-6 py-3 bg-dark-blue {(stack_turn <= (client_player_color === 'black' ? 1 : 2)) && 'opacity-70 pointer-events-none'}"
+						class="rounded-2xl px-6 py-3 bg-dark-blue {stack_turn <=
+							(client_player_color === 'black' ? 1 : 2) && 'opacity-70 pointer-events-none'}"
 						on:click={player_ready ? forfeit : ready_player}
 					>
 						{player_ready ? 'FORFEIT' : 'READY'}
@@ -53,11 +51,16 @@
 	{#each player_data as player, i}
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between items-center">
-				<h4>{player.name}'s stockpile 
-					<span class="text-purple-500 font-medium" class:hidden={players_ready || (i === 0 ? !player_ready : !other_player_ready)} >(Ready!)</span>
+				<h4>
+					{player.name}'s stockpile
+					<span
+						class="text-purple-500 font-medium"
+						class:hidden={players_ready || (i === 0 ? !player_ready : !other_player_ready)}
+						>(Ready!)</span
+					>
 				</h4>
-				{#if stack_turn % 2 === (player.color === 'black' ? 1 : 0) && stack_turn <= 2 && i === 0 }
-					<p class="text-purple-500 font-medium" >*Move your Marshal first</p>
+				{#if can_stack(i, stack_turn) && stack_turn <= 2 && i === 0}
+					<p class="text-purple-500 font-medium">*Move your Marshal first</p>
 				{/if}
 				<h4>Army Size: ({army_count(board_state, player.color)} / 26)</h4>
 			</div>
@@ -68,9 +71,7 @@
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
 					dragDisabled:
-						i === 1 ||
-						army_count(board_state, player.color) >= 26 ||
-						stack_turn % 2 === (player_data[0].color === 'white' ? 1 : 0)
+						i === 1 || army_count(board_state, player.color) >= 26 || !can_stack(i, stack_turn)
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
@@ -120,7 +121,20 @@
 	export let player_ready: boolean;
 	export let other_player_ready: boolean;
 
-	$: opponent_color = (client_player_color === 'white' ? 'black' : 'white') as 'white' | 'black'
+	$: opponent_color = (client_player_color === 'white' ? 'black' : 'white') as 'white' | 'black';
+
+	function can_stack(player_number: number, stack_turn: number) {
+		if ((player_number === 0 ? player_ready : other_player_ready) && !players_ready) {
+			return false;
+		}
+
+		const normal_turn_condition =
+			stack_turn % 2 === (player_data[player_number].color === 'black' ? 1 : 0);
+		if (player_number === 0) {
+			return normal_turn_condition || (other_player_ready && !players_ready);
+		}
+		return normal_turn_condition || (player_ready && !players_ready);
+	}
 
 	$: player_data = [
 		{
@@ -158,7 +172,7 @@
 
 	function ready_player() {
 		player_ready = true;
-		socket.emit("player_ready",{ready: true});
+		socket.emit('player_ready', { ready: true });
 	}
 
 	function handleConsider(e: CustomEvent, player_number: number) {
@@ -190,7 +204,7 @@
 			const player_piece_data = player_data[0].piece_data;
 			player_piece_data[dragged_item_index].amount += 1;
 			player_data[0].piece_data = player_piece_data;
-		} 
+		}
 
 		currently_dragged_stockpile_piece = null;
 	}
