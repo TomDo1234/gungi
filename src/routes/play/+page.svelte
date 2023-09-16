@@ -37,13 +37,16 @@
 			bind:player_ready
 			bind:other_player_ready
 			bind:other_player_name
+			{ opponent_color }
 			{ game_id }
 		/>
 	</div>
 	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
+	<CaptureModal on:choose={TakeOrCapture} bind:show={show_take_capture_modal} />
 </main>
 
 <script lang="ts">
+	import CaptureModal from './../../lib/components/CaptureModal.svelte';
 	import PlayerNameModal from './../../lib/components/PlayerNameModal.svelte';
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
@@ -56,12 +59,15 @@
 	let player_name: string | null = null;
 	let other_player_name: string | null = null;
 	let player_color: 'white' | 'black' | null = null;
+	$: opponent_color = (player_color === 'white' ? 'black' : 'white') as 'white' | 'black';
 	let stack_turn = 1;
 	let turn = 1;
 	let player_ready = false;
 	let other_player_ready = false;
 	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
+	let show_take_capture_modal = false;
+	let capturing_piece: Piece | null = null;
 	export let data: PageData;
 	const { game_id } = data;
 
@@ -120,17 +126,41 @@
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
 
+	function TakeOrCapture(e: CustomEvent) {
+		if (capturing_piece === null) {
+			return;
+		}
+
+		const { choice } = e.detail;
+		const square_number = capturing_piece.id as number; //id is square_number is guaranteed due to the logic in update_board_state
+		board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(capturing_piece);
+		if (choice === 'take') { //if take then delete everything below
+			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.splice(1)
+		}
+		stack_turn += 1;
+		turn += players_ready ? 1 : 0;
+		board_state = board_state
+		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
+		show_take_capture_modal = false;
+	}
 
 	function update_board_state(e: CustomEvent) {
-		const { piece, square_number, mode } = e.detail;
+		const { piece, square_number, mode }: {piece: Piece,square_number: number,mode: "add" | "remove"} = e.detail;
 		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
-		if (mode === 'add') {
+		if (mode === "add" && board_state[Math.floor(square_number / 9)][square_number % 9].pieces?.[0]?.color === opponent_color) {
+			piece.id = square_number;
+			capturing_piece = piece;
+			show_take_capture_modal = true;
+			return;
+		}
+		else if (mode === 'add') {
 			piece.id = square_number;
 			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
 			stack_turn += 1;
 			turn += players_ready ? 1 : 0;
 			socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
-		} else if (currently_dragged_piece_position) {
+		} 
+		else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
 			//It prevents Army Size from ticking up when you drag to the same place or anywhere else
 			board_state[Math.floor(currently_dragged_piece_position / 9)][currently_dragged_piece_position % 9].pieces.shift();

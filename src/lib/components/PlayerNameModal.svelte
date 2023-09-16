@@ -1,38 +1,35 @@
 {#if $open}
-	<div class="w-screen h-screen fixed flex justify-center items-center top-0 shadowy">
-		<div class="fixed bg-lime-950 py-10 px-12">
-			<div use:melt={$content} class="flex-col flex gap-y-5 items-start">
-				<h2 use:melt={$title}>Enter your name</h2>
-				<form class="flex flex-col gap-y-4" on:submit|preventDefault={onSubmit} >
-					<input
-						placeholder="Name"
-						required
-						class="px-6 rounded-2xl py-3 text-2xl text-lime-950 font-medium"
-						bind:value={name}
-					/>
-					<button
-						class="font-medium text-xl bg-lime-600 px-4 py-2 rounded-2xl w-fit">Submit</button
-					>
-				</form>
-			</div>
+	<BaseModal>
+		<div use:melt={$content} class="flex-col flex gap-y-5 items-start">
+			<h2 use:melt={$title}>Enter your name</h2>
+			<form class="flex flex-col gap-y-4" on:submit|preventDefault={onSubmit}>
+				<input
+					placeholder="Name"
+					required
+					class="px-6 rounded-2xl py-3 text-2xl text-lime-950 font-medium"
+					bind:value={name}
+				/>
+				<button class="font-medium text-xl bg-lime-600 px-4 py-2 rounded-2xl w-fit">Submit</button>
+			</form>
 		</div>
-	</div>
+	</BaseModal>
 {/if}
 
 <script lang="ts">
-	import { createDialog, melt } from '@melt-ui/svelte';
+	import { melt, createDialog } from '@melt-ui/svelte';
+	import BaseModal from './BaseModal.svelte';
 	import { createEventDispatcher } from 'svelte';
-	const {
-		elements: { content, title },
-		states: { open }
-	} = createDialog({ defaultOpen: true,closeOnOutsideClick: false });
 
 	let name = '';
+	const {
+		elements: { title, content },
+		states: { open }
+	} = createDialog({ defaultOpen: true, closeOnOutsideClick: false });
 
-    const dispatch = createEventDispatcher()
+	const dispatch = createEventDispatcher();
 
 	function onSubmit() {
-        dispatch('submit',{ name })
+		dispatch('submit', { name });
 		$open = false;
 	}
 </script>
@@ -41,9 +38,4 @@
 	h2 {
 		@apply text-4xl;
 	}
-
-    .shadowy {
-        background-color: rgba(0, 0, 0, 0.6); /* 60% opacity black */
-        backdrop-filter: blur(10px); /* add a blur effect */
-    }
 </style>
