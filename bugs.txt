@@ -4,3 +4,4 @@ Completed - 3. Player name needs to load for both people
 4. Blocked movement for Spy, cannon and samurai and Musketeer
 5. No stack rule for King and Fortress
 6. Captain moveset
+7. When a piece takes it only kills top piece not entire stack.
