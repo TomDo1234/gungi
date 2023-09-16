@@ -5,7 +5,7 @@
 	<div class="flex justify-between">
 		{#each player_data as player, i}
 			<div class="flex gap-x-4 items-center flex-1">
-				<h4 class="text-4xl font-bold {can_stack(i, stack_turn) && 'text-purple-500'}">
+				<h4 class="text-4xl font-bold {can_stack(i, stack_turn,players_ready) && 'text-purple-500'}">
 					{player.name}
 				</h4>
 				<img
@@ -59,7 +59,7 @@
 						>(Ready!)</span
 					>
 				</h4>
-				{#if can_stack(i, stack_turn) && stack_turn <= 2 && i === 0}
+				{#if can_stack(i, stack_turn,players_ready) && stack_turn <= 2 && i === 0}
 					<p class="text-purple-500 font-medium">*Move your Marshal first</p>
 				{/if}
 				<h4>Army Size: ({army_count(board_state, player.color)} / 26)</h4>
@@ -71,7 +71,7 @@
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
 					dragDisabled:
-						i === 1 || army_count(board_state, player.color) >= 26 || !can_stack(i, stack_turn)
+						i === 1 || army_count(board_state, player.color) >= 26 || !can_stack(i, stack_turn,players_ready)
 				}}
 				on:consider={(e) => handleConsider(e, i)}
 				on:finalize={handleFinalize}
@@ -123,7 +123,10 @@
 	export let game_id: string | null;
 	export let opponent_color: 'white' | 'black' | null;
 
-	function can_stack(player_number: number, stack_turn: number) {
+	function can_stack(player_number: number, stack_turn: number,players_ready: boolean) {
+		if (players_ready) {
+			return turn % 2 === (player_data[player_number].color === 'white' ? 1 : 0);
+		}
 		if ((player_number === 0 ? player_ready : other_player_ready) && !players_ready) {
 			return false;
 		}
@@ -172,7 +175,7 @@
 
 	function ready_player() {
 		player_ready = true;
-		socket.emit('player_ready', { ready: true,game_id });
+		socket.emit('player_ready', { ready: true, game_id });
 	}
 
 	function handleConsider(e: CustomEvent, player_number: number) {
