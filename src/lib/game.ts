@@ -66,9 +66,9 @@ function getMovesIn2DForm({ display_name, current_level, position }: Piece, boar
                         if (position === undefined) {
                             break;
                         }
-                        const ver_position = Math.floor(position / 9) - (direction[0] !== 0 ? i : 0); //move[0] is always negative 2 btw
+                        const ver_position = Math.floor(position / 9) + direction[0] * i; //move[0] is always negative 2 btw
                         const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8
-                        if (not_out_of_bounds && board_state[ver_position][position % 9]?.pieces.length > 0) {
+                        if (not_out_of_bounds && board_state[ver_position][(position % 9) + direction[1] * i]?.pieces.length > 0) {
                             break;
                         }
                     }
@@ -90,9 +90,9 @@ function getMovesIn2DForm({ display_name, current_level, position }: Piece, boar
                         if (position === undefined) {
                             break;
                         }
-                        const ver_position = Math.floor(position / 9) - (direction[0] !== 0 ? i : 0); //move[0] is always negative 2 btw
+                        const ver_position = Math.floor(position / 9) + direction[0] * i; //move[0] is always negative 2 btw
                         const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8
-                        if (not_out_of_bounds && board_state[ver_position][position % 9]?.pieces.length > 0) {
+                        if (not_out_of_bounds && board_state[ver_position][(position % 9) + direction[1] * i]?.pieces.length > 0) {
                             break;
                         }
                     }
@@ -116,9 +116,9 @@ function getMovesIn2DForm({ display_name, current_level, position }: Piece, boar
                         if (position === undefined) {
                             break;
                         }
-                        const ver_position = Math.floor(position / 9) - i; //move[0] is always negative 2 btw
+                        const ver_position = Math.floor(position / 9) + direction[0] * i; //move[0] is always negative 2 btw
                         const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8
-                        if (not_out_of_bounds && board_state[ver_position][position % 9]?.pieces.length > 0) {
+                        if (not_out_of_bounds && board_state[ver_position][(position % 9) + direction[1] * i]?.pieces.length > 0) {
                             break;
                         }
                     }
