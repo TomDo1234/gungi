@@ -133,13 +133,15 @@
 
 		const { choice } = e.detail;
 		const square_number = capturing_piece.id as number; //id is square_number is guaranteed due to the logic in update_board_state
-		board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(capturing_piece);
+		const square = board_state[Math.floor(square_number / 9)][square_number % 9];
+		square.pieces.unshift(capturing_piece);
 		if (choice === 'take') { //if take then delete everything below
-			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.splice(1)
+			square.pieces.splice(1,1);
 		}
+		square.pieces[0].current_level = square.pieces.length
 		stack_turn += 1;
 		turn += players_ready ? 1 : 0;
-		board_state = board_state
+		board_state = board_state // to rerender
 		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
 		show_take_capture_modal = false;
 	}
