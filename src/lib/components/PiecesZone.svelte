@@ -121,8 +121,7 @@
 	export let player_ready: boolean;
 	export let other_player_ready: boolean;
 	export let game_id: string | null;
-
-	$: opponent_color = (client_player_color === 'white' ? 'black' : 'white') as 'white' | 'black';
+	export let opponent_color: 'white' | 'black' | null;
 
 	function can_stack(player_number: number, stack_turn: number) {
 		if ((player_number === 0 ? player_ready : other_player_ready) && !players_ready) {
