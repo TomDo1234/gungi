@@ -67,6 +67,7 @@
 	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
 	let show_take_capture_modal = false;
+	let capturing_piece: Piece | null = null;
 	export let data: PageData;
 	const { game_id } = data;
 
@@ -126,21 +127,31 @@
 	);
 
 	function TakeOrCapture(e: CustomEvent) {
+		if (capturing_piece === null) {
+			return;
+		}
+
 		const { choice } = e.detail;
-		if (choice === 'stack') {
-
+		const square_number = capturing_piece.id as number; //id is square_number is guaranteed due to the logic in update_board_state
+		board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(capturing_piece);
+		if (choice === 'take') { //if take then delete everything below
+			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.splice(1)
 		}
-		else {
-
-		}
+		stack_turn += 1;
+		turn += players_ready ? 1 : 0;
+		board_state = board_state
+		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
 		show_take_capture_modal = false;
 	}
 
 	function update_board_state(e: CustomEvent) {
-		const { piece, square_number, mode } = e.detail;
+		const { piece, square_number, mode }: {piece: Piece,square_number: number,mode: "add" | "remove"} = e.detail;
 		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
 		if (mode === "add" && board_state[Math.floor(square_number / 9)][square_number % 9].pieces?.[0]?.color === opponent_color) {
+			piece.id = square_number;
+			capturing_piece = piece;
 			show_take_capture_modal = true;
+			return;
 		}
 		else if (mode === 'add') {
 			piece.id = square_number;
