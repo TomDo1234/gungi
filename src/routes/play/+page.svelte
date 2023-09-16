@@ -42,7 +42,7 @@
 		/>
 	</div>
 	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
-	<CaptureModal on:choose={TakeOrCapture} bind:show={show_take_capture_modal} />
+	<CaptureModal on:choose={TakeOrCapture} bind:show={show_take_capture_modal} { capturing_piece } />
 </main>
 
 <script lang="ts">
@@ -186,7 +186,8 @@
 		available_moves = [];
 		if (currently_dragged_board_piece || currently_hovered_tower_details.length > 0) {
 			available_moves = availableMoves(
-				currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece
+				currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece,
+				board_state
 			);
 		}
 		if (currently_dragged_stockpile_piece) {

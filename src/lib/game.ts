@@ -30,7 +30,7 @@ export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[]
     return items
 }
 
-function getMovesIn2DForm({ display_name, current_level }: Piece): [number,number][] {
+function getMovesIn2DForm({ display_name, current_level }: Piece,square_data: BoardState[number][number]): [number,number][] {
     if (display_name === 'Pawn') {
         switch(current_level) {
             case 1:
@@ -39,7 +39,14 @@ function getMovesIn2DForm({ display_name, current_level }: Piece): [number,numbe
                 return [[-1,0],[-1,-1],[-1,1]]
         }
     }
-    else if (display_name === "Marshal (King)" || display_name === "Fortress" || display_name === 'Captain') {
+    else if (display_name === "Marshal (King)" || display_name === "Fortress") {
+        return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
+    }
+    else if (display_name === 'Captain') {
+        if (square_data.pieces.length > 0) {
+            square_data.pieces.splice(0,1);
+            return getMovesIn2DForm(square_data.pieces[0],square_data);
+        }
         return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
     }
     else if (display_name === 'Spy') {
@@ -187,13 +194,13 @@ function getLegalMoves(position: number,moves: [number,number][]): number[] {
     return result
 }
 
-export function availableMoves(piece: Piece | undefined) {
+export function availableMoves(piece: Piece | undefined,board_state: BoardState) {
     if (!piece?.position) {
         return []
     }
     const { position } = piece;
 
-    const moves_in_2d = getMovesIn2DForm(piece);
+    const moves_in_2d = getMovesIn2DForm(piece,board_state[Math.floor(position / 9)][position % 9]);
 
     return getLegalMoves(position,moves_in_2d)
 }
