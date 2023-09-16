@@ -35,7 +35,7 @@ export const piece_data: Piece[] = [
     { id: 8, amount: 2, levels: 3, display_name: 'Samurai' },
     {
         id: 9,
-        amount: 1,
+        amount: 2,
         levels: 1,
         display_name: 'Fortress',
         note: "Fortresses can't stack on other pieces; they can only be stacked upon."
