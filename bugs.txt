@@ -5,3 +5,4 @@ Completed - 3. Player name needs to load for both people
 Completed - 5. No stack rule for King and Fortress
 Completed - 6. Captain moveset
 Completed - 7. When a piece takes it only kills top piece not entire stack.
+8. Drag and drop in the same place causes next turn
