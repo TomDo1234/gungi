@@ -31,7 +31,7 @@
 	<div class="container flex-col gap-y-5 text-xl">
 		<h1>Rules of Gameplay</h1>
 		<span
-			>Visit the link to the original reddit post which details the ruleset for Gungi and was the
+	  >Visit the link to the <a href="https://www.reddit.com/r/HunterXHunter/comments/6803yz/revised_rules_of_gungi_in_hunterxhunter_pdf/" target="_blank" >original reddit post</a> which details the ruleset for Gungi and was the
 			main inspiration for this website.</span
 		>
 		<ol class="list-decimal [&>li]:ml-6 flex flex-col gap-y-4">
