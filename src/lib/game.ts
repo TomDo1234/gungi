@@ -198,27 +198,33 @@ export function availableMoves(piece: Piece | undefined) {
     return getLegalMoves(position,moves_in_2d)
 }
 
-export function availableStockpileMoves(piece: Piece | null,board_state: BoardState,players_ready: boolean) {
+export function availableStockpileMoves(piece: Piece | null,board_state: BoardState,players_ready: boolean,opponent_color: "white" | "black") {
     if (!piece) {
         return []
     }
 
     const default_moves = players_ready ? Array.from({ length: 54 }, (_, i) => 27 + i) : Array.from({ length: 27 }, (_, i) => 54 + i);
-    if (piece.display_name === "Pawn") {
-        const pawn_taken_columns: number[] = [];
-        for (const row of board_state) {
-            for (const [i,square] of row.entries()) {
-                for (const square_piece of square.pieces) {
-                    if (square_piece?.display_name === "Pawn" && square_piece?.color === piece.color) {
-                        pawn_taken_columns.push(i)
-                        break;
-                    }
-                }
-            }
-        }
 
-        return default_moves.filter(i => !pawn_taken_columns.includes(i % 9))
+    const pawn_taken_columns: number[] = [];
+    const owned_by_opponent: number[] = [];
+    for (const [i,row] of board_state.entries()) {
+        for (const [j,square] of row.entries()) { 
+            if (square.pieces?.[0]?.color === opponent_color) {
+                owned_by_opponent.push(i * 9 + j)
+                continue;
+            }
+            for (const square_piece of square.pieces) {
+                if (square_piece?.display_name === "Pawn" && square_piece?.color === piece.color) {
+                    pawn_taken_columns.push(j)
+                    break;
+                }
+            }  
+        }
     }
 
-    return default_moves;
+    if (piece.display_name === "Pawn") {
+        return default_moves.filter(i => !pawn_taken_columns.includes(i % 9) && !owned_by_opponent.includes(i));
+    }
+
+    return default_moves.filter(i => !owned_by_opponent.includes(i));
 }
