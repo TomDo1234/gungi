@@ -25,29 +25,7 @@
 	</div>
 	<div class="flex flex-col gap-y-12 container">
 		{#each piece_data as piece}
-			{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ','')}
-			<div class="flex flex-col gap-y-5 bg-lime-900 p-8 rounded-3xl">
-				<div class="flex justify-between w-full">
-					<h4 class="capitalize text-xl font-semibold">
-						{piece.display_name}
-						<span class="normal-case">x{piece.amount}</span>
-					</h4>
-					{#if piece.note}
-						<span><b>Note:</b> {piece.note}</span>
-					{/if}
-				</div>
-				<div class="flex justify-between w-full">
-					{#each { length: 3 } as _, i}
-						{#if i + 1 <= piece.levels}
-							<img
-								src="/img/board/{piece_slug_name}{i + 1}.svg"
-								class="max-h-60"
-								alt="{piece_slug_name}{i + 1}"
-							/>
-						{/if}
-					{/each}
-				</div>
-			</div>
+			<PieceInfo { piece } />
 		{/each}
 	</div>
 	<div class="container flex-col gap-y-5 text-xl">
@@ -102,6 +80,7 @@
 </main>
 
 <script lang="ts">
+	import PieceInfo from '$lib/components/PieceInfo.svelte';
 	import { piece_data } from '$lib/pieces';
 </script>
 
