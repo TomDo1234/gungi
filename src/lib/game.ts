@@ -30,7 +30,7 @@ export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[]
     return items
 }
 
-function getMovesIn2DForm({ display_name, current_level }: Piece,square_data: BoardState[number][number],saved_level_for_captain: number | null = null): [number,number][] {
+function getMovesIn2DForm({ display_name, current_level }: Piece,board_state: BoardState,square_data: BoardState[number][number],saved_level_for_captain: number | null = null): [number,number][] {
     current_level = saved_level_for_captain ?? current_level;
     if (display_name === 'Pawn') {
         switch(current_level) {
@@ -47,7 +47,7 @@ function getMovesIn2DForm({ display_name, current_level }: Piece,square_data: Bo
         if (square_data.pieces.length > 1) {
             //length + 1 line right below is for cases where the bottom piece is another captain;
             square_data.pieces.splice(0,1);
-            return getMovesIn2DForm(square_data.pieces[0],square_data,current_level);
+            return getMovesIn2DForm(square_data.pieces[0],board_state,square_data,current_level);
         }
         return [[-1,0],[-1,-1],[-1,1],[0,1],[0,-1],[1,1],[1,-1],[1,0]]
     }
@@ -202,7 +202,7 @@ export function availableMoves(piece: Piece | undefined,board_state: BoardState)
     }
     const { position } = piece;
 
-    const moves_in_2d = getMovesIn2DForm(piece,structuredClone(board_state[Math.floor(position / 9)][position % 9]));
+    const moves_in_2d = getMovesIn2DForm(piece,board_state,structuredClone(board_state[Math.floor(position / 9)][position % 9]));
 
     return getLegalMoves(position,moves_in_2d)
 }
