@@ -190,7 +190,7 @@
 			);
 		}
 		if (currently_dragged_stockpile_piece) {
-			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece, board_state);
+			available_moves = availableStockpileMoves(currently_dragged_stockpile_piece, board_state,players_ready);
 		}
 	}
 </script>

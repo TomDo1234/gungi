@@ -198,12 +198,12 @@ export function availableMoves(piece: Piece | undefined) {
     return getLegalMoves(position,moves_in_2d)
 }
 
-export function availableStockpileMoves(piece: Piece | null,board_state: BoardState) {
+export function availableStockpileMoves(piece: Piece | null,board_state: BoardState,players_ready: boolean) {
     if (!piece) {
         return []
     }
 
-    const default_moves = Array.from({ length: 27 }, (_, i) => 54 + i);
+    const default_moves = players_ready ? Array.from({ length: 54 }, (_, i) => 27 + i) : Array.from({ length: 27 }, (_, i) => 54 + i);
     if (piece.display_name === "Pawn") {
         const pawn_taken_columns: number[] = [];
         for (const row of board_state) {
