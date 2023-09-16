@@ -113,12 +113,18 @@ function getMovesIn2DForm({ display_name, current_level, position }: Piece, boar
         switch (current_level) {
             case 1:
                 return [[-1, 0]]
-            case 2:
-                return [[-1, 0], [-2, 0]]
             default: {
                 const moves: [number, number][] = [];
-                for (let i = 0; i < 9; i++) {
+                for (let i = 1; i <= (current_level === 2 ? 2 : 9); i++) {
                     moves.push([-i, 0])
+                    if (position === undefined) {
+                        break;
+                    }
+                    const ver_position = Math.floor(position / 9) - i; //move[0] is always negative 2 btw
+                    const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8
+                    if (not_out_of_bounds && board_state[ver_position][position % 9]?.pieces.length > 0) {
+                        break;
+                    }
                 }
                 return moves;
             }
