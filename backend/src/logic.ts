@@ -2,8 +2,8 @@ import { randomBytes } from "node:crypto";
 import { BoardState, GameState } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function check_legality(prev_state: GameState | null, current_state: GameState) {
-    if (prev_state === null) {
+export function check_legality(prev_state: GameState | null | undefined, current_state: GameState) {
+    if (prev_state === null || prev_state === undefined) {
         return true
     }
     return true
