@@ -278,11 +278,15 @@ export function availableStockpileMoves(piece: Piece | null, board_state: BoardS
 
     const pawn_taken_columns: number[] = [];
     const owned_by_opponent: number[] = [];
+    const already_owned_by_you: number[] = [];
     for (const [i, row] of board_state.entries()) {
         for (const [j, square] of row.entries()) {
             if (square.pieces?.[0]?.color === opponent_color) {
                 owned_by_opponent.push(i * 9 + j)
                 continue;
+            }
+            if (square.pieces?.[0]?.color !== opponent_color && square.pieces?.[0]?.color !== undefined) { //this means its your color, relevant for fortress
+                already_owned_by_you.push(i * 9 + j)
             }
             for (const square_piece of square.pieces) {
                 if (square_piece?.display_name === "Pawn" && square_piece?.color === piece.color) {
@@ -295,6 +299,9 @@ export function availableStockpileMoves(piece: Piece | null, board_state: BoardS
 
     if (piece.display_name === "Pawn") {
         return default_moves.filter(i => !pawn_taken_columns.includes(i % 9) && !owned_by_opponent.includes(i));
+    }
+    else if (piece.display_name === "Fortress") {
+        return default_moves.filter(i => !already_owned_by_you.includes(i) && !owned_by_opponent.includes(i));
     }
 
     return default_moves.filter(i => !owned_by_opponent.includes(i));
