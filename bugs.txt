@@ -12,6 +12,6 @@ Completed - 10. Mirrored hover
 Completed - 12. Fortress only level 1 rule
 Completed - 13. Major pieces that move in straight lines stop 1 square short
 14. Mobile click movement
-15. Bug, cannot capture tier 3 for some reason sometimes
+Completed - 15. Bug, cannot capture tier 3 for some reason sometimes
 16. Sometimes Pieces get flipped in terms of movement and when you drag and drop it doubles
 

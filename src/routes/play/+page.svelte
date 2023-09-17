@@ -47,7 +47,6 @@
 </main>
 
 <script lang="ts">
-	import { test_board } from '$lib/closet/test_boards';
 	import CaptureModal from './../../lib/components/CaptureModal.svelte';
 	import PlayerNameModal from './../../lib/components/PlayerNameModal.svelte';
 	import Square from '$lib/components/Square.svelte';
@@ -107,6 +106,7 @@
 			})
 	
 			socket.on('received_data_after_turn',(message: SocketPayload) => {
+				console.log(message)
 				if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 					return;
 				}
@@ -124,7 +124,9 @@
 		});
 	})
 
-	let board_state: BoardState = test_board
+	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
+		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
+	);
 
 	function TakeOrCapture(e: CustomEvent) {
 		if (capturing_piece === null) {
