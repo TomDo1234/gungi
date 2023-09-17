@@ -76,7 +76,7 @@ game_io.on('connection', (socket: Socket) => {
   })
 
   socket.on('send_data_after_turn',(message) => {
-    if (!check_legality(rooms[message.game_id].previous_game_state,message)) {
+    if (!check_legality(rooms?.[message.game_id]?.previous_game_state,message)) {
       return;
     }
     rooms[message.game_id].previous_game_state = message;
