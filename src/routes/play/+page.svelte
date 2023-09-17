@@ -117,8 +117,8 @@
 				}
 				turn = message.turn;
 				stack_turn = message.stack_turn;
-				board_state = message.board_state
-				console.log(board_state);
+				board_state = message.board_state;
+				playSound();
 			})
 		});
 	})
@@ -147,6 +147,11 @@
 		show_take_capture_modal = false;
 	}
 
+	function playSound() {
+      const audio = new Audio('/move_sound.mp3');
+      audio.play();
+    }
+
 	function update_board_state(e: CustomEvent) {
 		const { piece, square_number, mode }: {piece: Piece,square_number: number,mode: "add" | "remove"} = e.detail;
 		const currently_dragged_piece_position = currently_dragged_board_piece?.position;
@@ -161,6 +166,7 @@
 			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
 			stack_turn += 1;
 			turn += players_ready ? 1 : 0;
+			playSound();
 			socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
 		} 
 		else if (currently_dragged_piece_position) {
