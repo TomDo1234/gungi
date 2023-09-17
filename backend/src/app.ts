@@ -41,10 +41,14 @@ game_io.on('connection', (socket: Socket) => {
     if (!(message.game_id in rooms)) {
       rooms[message.game_id] = {previous_game_state: null, players: {}};
     }
-    const { players,previous_game_state } = rooms[message.game_id];
+    const { players,previous_game_state: ref_previous_game_state } = rooms[message.game_id];
     if (message.token in players) {
+      const previous_game_state = structuredClone(ref_previous_game_state);
       const flip = (previous_game_state?.stack_turn ?? 0) % 2 === (players[message.token].player_color === 'white' ? 1 : 0)
-      if (flip && previous_game_state) previous_game_state.board_state = flip_board(previous_game_state?.board_state)
+      if (flip && previous_game_state) {
+        previous_game_state.board_state = flip_board(previous_game_state?.board_state)
+        previous_game_state.player_data.reverse()
+      }
       game_io.emit("joined_room",{player_data: players[message.token],previous_game_state,socket_id: socket.id});
       return;
     }

@@ -40,7 +40,7 @@
 			{ game_id }
 		/>
 	</div>
-	<PlayerNameModal on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
+	<PlayerNameModal bind:show={name_modal_show} on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
 	<CaptureModal on:choose={TakeOrCapture} bind:show={show_take_capture_modal} { capturing_piece } />
 </main>
 
@@ -66,6 +66,7 @@
 	$: players_ready = player_ready && other_player_ready;
 	let access_token: string | null = null;
 	let show_take_capture_modal = false;
+	let name_modal_show = true;
 	let capturing_piece: Piece | null = null;
 	export let data: PageData;
 	const { game_id } = data;
@@ -89,9 +90,11 @@
 				if (message.socket_id === socket.id) {
 					player_color = message.player_data.player_color;
 					if (message.previous_game_state) {
+						name_modal_show = false;
 						turn = message.previous_game_state?.turn ?? 1
 						stack_turn = message.previous_game_state?.stack_turn ?? 1
 						board_state = message.previous_game_state?.board_state ?? board_state
+						player_data = message.previous_game_state?.player_data ?? player_data
 					}
 				}
 			})
@@ -122,7 +125,6 @@
 				turn = message.turn;
 				stack_turn = message.stack_turn;
 				board_state = message.board_state;
-				player_data = message.player_data;
 				playSound();
 			})
 		});
@@ -132,7 +134,7 @@
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
 
-	$: player_data = [
+	let player_data: PlayerData[] = [
 		{
 			name: player_name ?? 'Anonymous (Player 1)',
 			color: player_color ?? 'white',
@@ -149,7 +151,20 @@
 				return piece;
 			})
 		}
-	] as PlayerData[];
+	]
+
+	$: player_data[0].name = player_name ?? 'Anonymous (Player 1)'
+	$: player_data[1].name = other_player_name ?? 'Anonymous (Player 1)'
+	$: player_data[0].color = player_color ?? 'white'
+	$: player_data[1].color = opponent_color ?? 'black'
+	$: player_data[0].piece_data = player_data[0].piece_data.map((piece: Piece) => {
+		piece.color = player_color ?? 'white';
+		return piece;
+	})
+	$: player_data[1].piece_data = player_data[1].piece_data.map((piece: Piece) => {
+		piece.color = opponent_color ?? 'black';
+		return piece;
+	})
 
 	function TakeOrCapture(e: CustomEvent) {
 		if (capturing_piece === null) {
