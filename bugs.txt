@@ -1,5 +1,5 @@
 Completed - 1. When you drag and drop in the same place the websocket fires and the board gets flipped for no reason, or even when you drag and move on the board itself (not stockpile)
-2. Game state needs to load when the user rejoins
+Completed - 2. Game state needs to load when the user rejoins
 Completed - 3. Player name needs to load for both people
 Completed - 4. Blocked movement for Spy, cannon and samurai and Musketeer
 Completed - 5. No stack rule for King and Fortress

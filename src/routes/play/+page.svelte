@@ -90,6 +90,11 @@
 			socket.on('joined_room',(message) => {
 				if (message.socket_id === socket.id) {
 					player_color = message.player_data.player_color;
+					if (message.previous_game_state) {
+						turn = message.previous_game_state?.turn ?? 1
+						stack_turn = message.previous_game_state?.stack_turn ?? 1
+						board_state = message.previous_game_state?.board_state ?? board_state
+					}
 				}
 			})
 	

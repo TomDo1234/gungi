@@ -38,13 +38,14 @@ game_io.on('connection', (socket: Socket) => {
 
   socket.on('join_game',(message) => {  
     socket.join(message.game_id);
-    console.log(message.game_id)
     if (!(message.game_id in rooms)) {
       rooms[message.game_id] = {previous_game_state: null, players: {}};
     }
-    const players = rooms[message.game_id].players;
+    const { players,previous_game_state } = rooms[message.game_id];
     if (message.token in players) {
-      game_io.emit("joined_room",{player_data: players[message.token],socket_id: socket.id});
+      const flip = (previous_game_state?.stack_turn ?? 0) % 2 === (players[message.token].player_color === 'white' ? 1 : 0)
+      if (flip && previous_game_state) previous_game_state.board_state = flip_board(previous_game_state?.board_state)
+      game_io.emit("joined_room",{player_data: players[message.token],previous_game_state,socket_id: socket.id});
       return;
     }
     const player_list = Object.keys(players);
