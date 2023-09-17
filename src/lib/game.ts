@@ -53,7 +53,7 @@ function getMovesIn2DForm({ display_name, current_level, position,color }: Piece
             const ver_position = Math.floor(position / 9) + move[0]; //move[0] is always negative 2 btw
             const horiz_position = (position % 9) + move[1];
             const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8 && horiz_position >= 0 && horiz_position <= 8
-            const pieces = board_state[ver_position][horiz_position]?.pieces;
+            const pieces = board_state?.[ver_position]?.[horiz_position]?.pieces;
             if (not_out_of_bounds && pieces.length > (pieces?.[0]?.color === color ? 0 : 1)) { //coincidence btw, if the square piece is nothing then color is undefined so no skip, cause undefined will never equal to the checked piece color
                 continue;
             }
@@ -87,7 +87,7 @@ function getMovesIn2DForm({ display_name, current_level, position,color }: Piece
                         const ver_position = Math.floor(position / 9) + direction[0] * i; //move[0] is always negative 2 btw
                         const horiz_position = (position % 9) + direction[1] * i;
                         const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8 && horiz_position >= 0 && horiz_position <= 8
-                        if (not_out_of_bounds && board_state[ver_position][horiz_position]?.pieces.length > 0) {
+                        if (not_out_of_bounds && board_state?.[ver_position]?.[horiz_position]?.pieces.length > 0) {
                             break;
                         }
                     }
@@ -112,7 +112,7 @@ function getMovesIn2DForm({ display_name, current_level, position,color }: Piece
                         const ver_position = Math.floor(position / 9) + direction[0] * i; //move[0] is always negative 2 btw
                         const horiz_position = (position % 9) + direction[1] * i;
                         const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8 && horiz_position >= 0 && horiz_position <= 8
-                        if (not_out_of_bounds && board_state[ver_position][horiz_position]?.pieces.length > 0) {
+                        if (not_out_of_bounds && board_state?.[ver_position]?.[horiz_position]?.pieces.length > 0) {
                             break;
                         }
                     }
@@ -139,7 +139,7 @@ function getMovesIn2DForm({ display_name, current_level, position,color }: Piece
                         const ver_position = Math.floor(position / 9) + direction[0] * i; //move[0] is always negative 2 btw
                         const horiz_position = (position % 9) + direction[1] * i;
                         const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8 && horiz_position >= 0 && horiz_position <= 8
-                        if (not_out_of_bounds && board_state[ver_position][horiz_position]?.pieces.length > 0) {
+                        if (not_out_of_bounds && board_state?.[ver_position]?.[horiz_position]?.pieces.length > 0) {
                             break;
                         }
                     }
