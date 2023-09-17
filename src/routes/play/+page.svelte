@@ -106,6 +106,7 @@
 			})
 	
 			socket.on('received_data_after_turn',(message: SocketPayload) => {
+				console.log(message)
 				if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 					return;
 				}
@@ -196,7 +197,8 @@
 		if (currently_dragged_board_piece || currently_hovered_tower_details.length > 0) {
 			available_moves = availableMoves(
 				currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece,
-				board_state
+				board_state,
+				player_color
 			);
 		}
 		if (currently_dragged_stockpile_piece) {

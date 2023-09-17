@@ -243,11 +243,13 @@ function getMovesIn2DForm({ display_name, current_level, position,color }: Piece
     return []
 }
 
-function getLegalMoves(position: number, moves: [number, number][]): number[] {
+function getLegalMoves(position: number, moves: [number, number][],flip: boolean): number[] {
     const row = Math.floor(position / 9)
     const col = position % 9;
     const result: number[] = [];
-    for (const [vertical_movement, horizontal_movement] of moves) {
+    for (let [vertical_movement, horizontal_movement] of moves) {
+        vertical_movement *= flip ? -1 : 1
+        horizontal_movement *= flip ? -1 : 1
         if (row + vertical_movement > 8 || row + vertical_movement < 0 || col + horizontal_movement > 8 || col + horizontal_movement < 0) {
             continue;
         }
@@ -256,15 +258,15 @@ function getLegalMoves(position: number, moves: [number, number][]): number[] {
     return result
 }
 
-export function availableMoves(piece: Piece | undefined, board_state: BoardState) {
+export function availableMoves(piece: Piece | undefined, board_state: BoardState,client_player_color: 'white' | 'black' | null) {
     if (!piece?.position) {
         return []
     }
     const { position } = piece;
 
     const moves_in_2d = getMovesIn2DForm(piece, board_state, structuredClone(board_state[Math.floor(position / 9)][position % 9]));
-
-    return getLegalMoves(position, moves_in_2d)
+    const legal_moves = getLegalMoves(position, moves_in_2d,client_player_color !== piece?.color);
+    return legal_moves
 }
 
 export function availableStockpileMoves(piece: Piece | null, board_state: BoardState, players_ready: boolean, opponent_color: "white" | "black") {
