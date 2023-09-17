@@ -197,7 +197,8 @@
 		if (currently_dragged_board_piece || currently_hovered_tower_details.length > 0) {
 			available_moves = availableMoves(
 				currently_hovered_tower_details?.[0] ?? currently_dragged_board_piece,
-				board_state
+				board_state,
+				player_color
 			);
 		}
 		if (currently_dragged_stockpile_piece) {
