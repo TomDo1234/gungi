@@ -9,6 +9,8 @@ Completed - 7. When a piece takes it only kills top piece not entire stack.
 9. Sound queues
 10. Mirrored hover
 11. Info not being registered to 2nd player
-12. Fortress only level 1 rule
-13. Major pieces that move in straight lines stop 1 square short
+Completed - 12. Fortress only level 1 rule
+Completed - 13. Major pieces that move in straight lines stop 1 square short
 14. Mobile click movement
+
+
