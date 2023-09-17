@@ -3,7 +3,7 @@
 		{players_ready ? 'Game' : 'Draft'} Phase {players_ready ? `- Turn ${turn}` : ''}
 	</h2>
 	<div class="flex justify-between">
-		{#each player_data as player, i}
+		{#each player_data ?? [] as player, i}
 			<div class="flex gap-x-4 items-center flex-1">
 				<h4 class="text-4xl font-bold {can_stack(i, stack_turn,players_ready) && 'text-purple-500'}">
 					{player.name}
@@ -48,7 +48,7 @@
 			{/each}
 		</div>
 	</div>
-	{#each player_data as player, i (i)}
+	{#each player_data ?? [] as player, i (i)}
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between items-center">
 				<h4>
