@@ -11,6 +11,6 @@ export type Piece = {
 
 export type BoardState = { id: number, pieces: Piece[] }[][];
 
-export type GameState = {board_state: BoardState,turn: number}
+export type GameState = {board_state: BoardState,turn: number,stack_turn: number}
 
 export type Players = Record<string,{player_color: 'white' | 'black',name: string | null,ready: boolean}>
