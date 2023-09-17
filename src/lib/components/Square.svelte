@@ -1,5 +1,5 @@
 <div
-	class="bg-[#eecaa0] border-[#bc7e38] {items.length < 3 &&
+	class="bg-[#eecaa0] border-[#bc7e38] {(items.length < 3 || client_player_color !== items[2].color) &&
 		square_is_valid_move &&
 		'border-purple-600'} p-1.5
 	border-[0.5px] tablet:border border-solid tablet:w-16 laptop:w-20 desktop:w-24 aspect-square"
@@ -31,6 +31,7 @@
 	export let currently_dragged_board_piece: Piece | null;
 	export let is_client_turn: boolean;
 	export let players_ready: boolean;
+	export let client_player_color: 'white' | 'black' | null;
 
 	export let items: Piece[];
 	const dispatch = createEventDispatcher();
@@ -67,7 +68,7 @@
 	$: options = {
 		items,
 		morphDisabled: true,
-		dropFromOthersDisabled: items.length >= 3 || !square_is_valid_move,
+		dropFromOthersDisabled: (items.length >= 3 && items[2].color === client_player_color ) || !square_is_valid_move,
 		dropTargetClasses: ['border-purple-600'],
 		dropTargetStyle: {},
 		dragDisabled: !is_client_turn || !players_ready

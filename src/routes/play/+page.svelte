@@ -13,6 +13,7 @@
 						<Square
 							{square_number}
 							{square_is_valid_move}
+							client_player_color={player_color}
 							is_client_turn={turn % 2 === (player_color === 'white' ? 1 : 0)}
 							items={square.pieces}
 							on:tower_details={showTowerDetails}
@@ -105,7 +106,6 @@
 			})
 	
 			socket.on('received_data_after_turn',(message: SocketPayload) => {
-				console.log(players_ready,player_ready,other_player_ready)
 				if (players_ready && message.turn % 2 !== (player_color === 'white' ? 1 : 0)) {
 					return;
 				}
@@ -118,6 +118,7 @@
 				turn = message.turn;
 				stack_turn = message.stack_turn;
 				board_state = message.board_state
+				console.log(board_state);
 			})
 		});
 	})
