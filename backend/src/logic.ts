@@ -31,6 +31,9 @@ export function flip_board(board: BoardState): BoardState {
         for (let j = numCols - 1; j >= 0; j--) {
             const square = board[i][j]
             square.id = (8 - i) * 9 + 8 - j
+            if (square.pieces.length > 0) {
+                square.pieces[0].position = 80 - (square.pieces[0]?.position ?? 0)
+            }
             newRow.push(square);
         }
         flippedBoard.push(newRow);
