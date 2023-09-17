@@ -30,7 +30,7 @@ export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[]
     return items
 }
 
-function getMovesIn2DForm({ display_name, current_level, position }: Piece, board_state: BoardState, square_data: BoardState[number][number], saved_level_for_captain: number | null = null): [number, number][] {
+function getMovesIn2DForm({ display_name, current_level, position,color }: Piece, board_state: BoardState, square_data: BoardState[number][number], saved_level_for_captain: number | null = null): [number, number][] {
     current_level = saved_level_for_captain ?? current_level;
     if (display_name === 'Pawn') {
         switch (current_level) {
@@ -53,7 +53,8 @@ function getMovesIn2DForm({ display_name, current_level, position }: Piece, boar
             const ver_position = Math.floor(position / 9) + move[0]; //move[0] is always negative 2 btw
             const horiz_position = (position % 9) + move[1];
             const not_out_of_bounds = position !== undefined && ver_position >= 0 && ver_position <= 8 && horiz_position >= 0 && horiz_position <= 8
-            if (not_out_of_bounds && board_state[ver_position][horiz_position]?.pieces.length > 0) {
+            const pieces = board_state[ver_position][horiz_position]?.pieces;
+            if (not_out_of_bounds && pieces.length > (pieces?.[0]?.color === color ? 0 : 1)) { //coincidence btw, if the square piece is nothing then color is undefined so no skip, cause undefined will never equal to the checked piece color
                 continue;
             }
             moves.push(move);
