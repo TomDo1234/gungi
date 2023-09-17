@@ -71,6 +71,6 @@
 		dropFromOthersDisabled: (items.length >= 3 && items[2].color === client_player_color ) || !square_is_valid_move,
 		dropTargetClasses: ['border-purple-600'],
 		dropTargetStyle: {},
-		dragDisabled: !is_client_turn || !players_ready
+		dragDisabled: !is_client_turn || !players_ready || items.at(0)?.color !== client_player_color
 	};
 </script>

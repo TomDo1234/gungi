@@ -47,6 +47,7 @@
 </main>
 
 <script lang="ts">
+	import { test_board } from '$lib/closet/test_boards';
 	import CaptureModal from './../../lib/components/CaptureModal.svelte';
 	import PlayerNameModal from './../../lib/components/PlayerNameModal.svelte';
 	import Square from '$lib/components/Square.svelte';
@@ -123,9 +124,7 @@
 		});
 	})
 
-	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
-		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
-	);
+	let board_state: BoardState = test_board
 
 	function TakeOrCapture(e: CustomEvent) {
 		if (capturing_piece === null) {
