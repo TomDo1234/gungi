@@ -1,7 +1,7 @@
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server, Socket } from 'socket.io';
-import type { GameState, Players } from './types';
+import type { GameState, Players, SocketDataAfterTurn } from './types';
 import { check_legality, flip_board, generate_token } from './logic';
 
 const app = express();
@@ -76,12 +76,13 @@ game_io.on('connection', (socket: Socket) => {
     }
   })
 
-  socket.on('send_data_after_turn',(message) => {
+  socket.on('send_data_after_turn',(message: SocketDataAfterTurn) => {
     if (!check_legality(rooms?.[message.game_id]?.previous_game_state,message)) {
       return;
     }
     rooms[message.game_id].previous_game_state = message;
     message.board_state = flip_board(message.board_state)
+    message.player_data?.reverse()
     game_io.to(message.game_id).emit('received_data_after_turn',message) //flip board because the players have mirrored views, their color is always towards the bottom
     //of their screens
   })
