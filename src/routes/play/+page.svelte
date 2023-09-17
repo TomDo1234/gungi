@@ -165,10 +165,12 @@
 		else if (mode === 'add') {
 			piece.id = square_number;
 			board_state[Math.floor(square_number / 9)][square_number % 9].pieces.unshift(piece);
-			stack_turn += 1;
-			turn += players_ready ? 1 : 0;
-			playSound();
-			socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
+			if (currently_dragged_piece_position !== square_number) {// check if it wasnt dropped in same position
+				stack_turn += 1;
+				turn += players_ready ? 1 : 0;
+				playSound();
+				socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
+			}
 		} 
 		else if (currently_dragged_piece_position) {
 			//position only not null and recorded when the piece was already on the board
