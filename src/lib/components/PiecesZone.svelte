@@ -48,7 +48,7 @@
 			{/each}
 		</div>
 	</div>
-	{#each player_data as player, i}
+	{#each player_data as player, i (i)}
 		<div class="flex flex-col justify-between rounded-3xl gap-y-5 bg-lime-950 text-white py-5 px-8">
 			<div class="flex justify-between items-center">
 				<h4>
