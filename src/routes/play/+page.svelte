@@ -30,15 +30,13 @@
 			tower_details={currently_hovered_tower_details}
 			{board_state}
 			{turn}
-			client_player_name={player_name}
 			client_player_color={player_color}
 			bind:currently_dragged_stockpile_piece
 			bind:stack_turn
-			bind:players_ready
+			bind:players_ready 
 			bind:player_ready
 			bind:other_player_ready
-			bind:other_player_name
-			{ opponent_color }
+			bind:player_data
 			{ game_id }
 		/>
 	</div>
@@ -51,8 +49,8 @@
 	import PlayerNameModal from './../../lib/components/PlayerNameModal.svelte';
 	import Square from '$lib/components/Square.svelte';
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
-	import type { BoardState,Piece } from '$lib/pieces';
-	import { availableMoves, availableStockpileMoves } from '$lib/game';
+	import { piece_data, type BoardState,type Piece } from '$lib/pieces';
+	import { availableMoves, availableStockpileMoves, type PlayerData } from '$lib/game';
 	import { socket } from '$lib/ws';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
@@ -124,6 +122,7 @@
 				turn = message.turn;
 				stack_turn = message.stack_turn;
 				board_state = message.board_state;
+				player_data = message.player_data;
 				playSound();
 			})
 		});
@@ -132,6 +131,25 @@
 	let board_state: BoardState = Array.from({ length: 9 }, (_, i) =>
 		Array.from({ length: 9 }, (_, j) => ({ id: i * 9 + j, pieces: [] }))
 	);
+
+	$: player_data = [
+		{
+			name: player_name ?? 'Anonymous (Player 1)',
+			color: player_color ?? 'white',
+			piece_data: structuredClone(piece_data).map((piece: Piece) => {
+				piece.color = player_color ?? 'white';
+				return piece;
+			})
+		},
+		{
+			name: other_player_name ?? 'Anonymous (Player 2)',
+			color: opponent_color ?? 'black',
+			piece_data: structuredClone(piece_data).map((piece: Piece) => {
+				piece.color = opponent_color ?? 'black';
+				return piece;
+			})
+		}
+	] as PlayerData[];
 
 	function TakeOrCapture(e: CustomEvent) {
 		if (capturing_piece === null) {
@@ -149,7 +167,8 @@
 		stack_turn += 1;
 		turn += players_ready ? 1 : 0;
 		board_state = board_state // to rerender
-		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
+		playSound();
+		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id,player_data});
 		show_take_capture_modal = false;
 	}
 
@@ -174,7 +193,7 @@
 				stack_turn += 1;
 				turn += players_ready ? 1 : 0;
 				playSound();
-				socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id});
+				socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id,player_data});
 			}
 		} 
 		else if (currently_dragged_piece_position) {

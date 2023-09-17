@@ -106,14 +106,12 @@
 <script lang="ts">
 	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
-	import { piece_data, type Piece, type BoardState } from '$lib/pieces';
+	import type { Piece,BoardState } from '$lib/pieces';
 	import { socket } from '$lib/ws';
 
 	export let tower_details: Piece[];
 	export let board_state: BoardState;
 	export let currently_dragged_stockpile_piece: Piece | null;
-	export let client_player_name: string | null = null;
-	export let other_player_name: string | null = null;
 	export let client_player_color: 'white' | 'black' | null;
 	export let turn: number;
 	export let stack_turn: number;
@@ -121,7 +119,7 @@
 	export let player_ready: boolean;
 	export let other_player_ready: boolean;
 	export let game_id: string | null;
-	export let opponent_color: 'white' | 'black' | null;
+	export let player_data: PlayerData[]
 
 	function can_stack(player_number: number, stack_turn: number,players_ready: boolean) {
 		if (players_ready) {
@@ -138,25 +136,6 @@
 		}
 		return normal_turn_condition || (player_ready && !players_ready);
 	}
-
-	$: player_data = [
-		{
-			name: client_player_name ?? 'Anonymous (Player 1)',
-			color: client_player_color ?? 'white',
-			piece_data: structuredClone(piece_data).map((piece: Piece) => {
-				piece.color = client_player_color ?? 'white';
-				return piece;
-			})
-		},
-		{
-			name: other_player_name ?? 'Anonymous (Player 2)',
-			color: opponent_color ?? 'black',
-			piece_data: structuredClone(piece_data).map((piece: Piece) => {
-				piece.color = opponent_color ?? 'black';
-				return piece;
-			})
-		}
-	] as PlayerData[];
 
 	function army_count(board_state: BoardState, color: 'white' | 'black'): number {
 		//Essentially, count the pieces of the same color in the entire board in all stacks
@@ -206,7 +185,6 @@
 			);
 			const player_piece_data = player_data[0].piece_data;
 			player_piece_data[dragged_item_index].amount += 1;
-			player_data[0].piece_data = player_piece_data;
 		}
 
 		currently_dragged_stockpile_piece = null;
