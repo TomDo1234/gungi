@@ -21,10 +21,13 @@
 	import { createEventDispatcher } from 'svelte';
 
 	let name = '';
+	export let show: boolean;
 	const {
 		elements: { title, content },
 		states: { open }
 	} = createDialog({ defaultOpen: true, closeOnOutsideClick: false });
+	
+	$: $open = show;
 
 	const dispatch = createEventDispatcher();
 

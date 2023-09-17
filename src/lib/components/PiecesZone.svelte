@@ -78,7 +78,7 @@
 			>
 				{#each player.piece_data as piece, j}
 					{@const piece_slug_name = piece.display_name.toLowerCase().replaceAll(' ', '')}
-					{#key `${piece.id}|${i}|${j}|${player.color}`}
+					{#key `${piece.id}|${i}|${j}|${player.color}|${piece.amount}`}
 						<div
 							class="h-12 laptop:h-14 aspect-square relative
 							{piece.display_name !== 'Marshal (King)' && stack_turn <= 2 ? 'pointer-events-none' : ''}"
