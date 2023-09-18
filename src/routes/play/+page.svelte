@@ -125,6 +125,7 @@
 				turn = message.turn;
 				stack_turn = message.stack_turn;
 				board_state = message.board_state;
+				player_data = message.player_data;
 				playSound();
 			})
 		});
