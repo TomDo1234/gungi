@@ -8,7 +8,7 @@ Completed - 7. When a piece takes it only kills top piece not entire stack.
 Completed - 8. Drag and drop in the same place causes next turn
 Completed - 9. Sound queues
 Completed - 10. Mirrored hover
-11. Info not being registered to 2nd player
+Completed - 11. Info not being registered to 2nd player
 Completed - 12. Fortress only level 1 rule
 Completed - 13. Major pieces that move in straight lines stop 1 square short
 14. Mobile click movement
