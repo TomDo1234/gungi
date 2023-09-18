@@ -2,7 +2,7 @@
 	<h2 class="font-bold text-4xl">
 		{players_ready ? 'Game' : 'Draft'} Phase {players_ready ? `- Turn ${turn}` : ''}
 	</h2>
-	<div class="flex justify-between">
+	<div class="flex flex-col gap-y-4 tablet:flex-row items-center tablet:items-start justify-between">
 		{#each player_data ?? [] as player, i}
 			<div class="flex gap-x-4 items-center flex-1">
 				<h4 class="text-4xl font-bold {can_stack(i, stack_turn,players_ready) && 'text-purple-500'}">
