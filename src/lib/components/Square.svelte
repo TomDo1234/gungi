@@ -9,7 +9,7 @@
 	role="application"
 	on:mouseleave
 >
-	{#each items as piece, i (`${piece?.id}${i}`)}
+	{#each items as piece, i (`${piece?.id}|${i}|${piece.display_name}|${piece.color}`)}
 		<Tile
 			on:mouseover={emitStackInfo}
 			on:focus={emitStackInfo}
