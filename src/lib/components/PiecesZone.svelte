@@ -107,7 +107,7 @@
 	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
 	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
 	import type { Piece,BoardState } from '$lib/pieces';
-	import { socket } from '$lib/ws';
+	import type { Socket } from 'socket.io-client';
 
 	export let tower_details: Piece[];
 	export let board_state: BoardState;
@@ -119,7 +119,8 @@
 	export let player_ready: boolean;
 	export let other_player_ready: boolean;
 	export let game_id: string | null;
-	export let player_data: PlayerData[]
+	export let player_data: PlayerData[];
+	export let socket: Socket;
 
 	function can_stack(player_number: number, stack_turn: number,players_ready: boolean) {
 		if (players_ready) {
