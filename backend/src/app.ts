@@ -14,6 +14,7 @@ const io = new Server(server,{
 });
 
 const game_io = io.of('/game_ws');
+const lobby_io = io.of('/lobby_ws');
 const port = 8080;
 
 app.get('/', ( _, res) => {
@@ -21,6 +22,20 @@ app.get('/', ( _, res) => {
 });
 
 const rooms: Record<string,{previous_game_state: null | GameState,players: Players}> = {}
+
+lobby_io.on('connection',(socket: Socket) => {
+  socket.join('the_lobby');
+  socket.on('get_games', (socket: Socket) => {
+    const open_rooms = [];
+    for (const [game_id,room] of Object.entries(rooms)) {
+      const players = Object.values(room.players);
+      if (players.length <= 1) {
+        open_rooms.push({game_id, host_name: players?.[0]?.name})
+      }
+    }
+    socket.to('the_lobby').emit('get_games',open_rooms)
+  })
+})
 
 game_io.on('connection', (socket: Socket) => {
   console.log('a user connected');
