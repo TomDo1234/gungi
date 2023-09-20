@@ -20,13 +20,15 @@
 </main>
 
 <script lang="ts" >
-	import { lobby_socket } from "$lib/ws";
-	import { onMount } from "svelte";
+	import { afterNavigate } from "$app/navigation";
+	import { PUBLIC_WS_ENDPOINT } from "$env/static/public";
+	import { io } from "socket.io-client";
     import { v4 as uuidv4 } from 'uuid';
 
     let games: {game_id: string, host_name: string}[] = [];
-
-    onMount(() => {
+    
+    afterNavigate(() => {
+        const lobby_socket = io(`${PUBLIC_WS_ENDPOINT}/lobby_ws`);
         lobby_socket.on('connect',() => {
             lobby_socket.emit('get_games');
             setInterval(() => {lobby_socket.emit('get_games')},1500);

@@ -38,6 +38,7 @@
 			bind:other_player_ready
 			bind:player_data
 			{ game_id }
+			{ socket }
 		/>
 	</div>
 	<PlayerNameModal bind:show={name_modal_show} on:submit={(e) => {player_name = e.detail.name;socket.emit("declare_name",{name: player_name, game_id})}} />
@@ -51,9 +52,10 @@
 	import PiecesZone from '$lib/components/PiecesZone.svelte';
 	import { piece_data, type BoardState,type Piece } from '$lib/pieces';
 	import { availableMoves, availableStockpileMoves, type PlayerData } from '$lib/game';
-	import { socket } from '$lib/ws';
-	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
+	import { PUBLIC_WS_ENDPOINT } from '$env/static/public';
+	import { io } from 'socket.io-client';
+	import { afterNavigate } from '$app/navigation';
 
 	let player_name: string | null = null;
 	let other_player_name: string | null = null;
@@ -68,10 +70,11 @@
 	let show_take_capture_modal = false;
 	let name_modal_show = true;
 	let capturing_piece: Piece | null = null;
+	const socket = io(`${PUBLIC_WS_ENDPOINT}/game_ws`);
 	export let data: PageData;
 	const { game_id } = data;
 
-	onMount(() => {
+	afterNavigate(() => {
 		access_token = localStorage.getItem('gungi_token')
 		socket.on('connect',() => {
 			socket.emit('send_token',{token: access_token,game_id});
