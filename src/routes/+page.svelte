@@ -3,7 +3,7 @@
         Gungi
     </h1>
     <div class="flex gap-x-16 mt-12 text-4xl" >
-        <a href="/play" >
+        <a href="/lobby" >
             <button class="round_button" >Play</button>
         </a>
         <a href="/about" >

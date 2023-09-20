@@ -14,11 +14,15 @@
             </div>
         {/each}
     </div>
+    <a href="/play?game_id={uuidv4()}" >
+        <button class="round_button text-2xl" >Create</button>
+    </a>
 </main>
 
 <script lang="ts" >
 	import { lobby_socket } from "$lib/ws";
 	import { onMount } from "svelte";
+    import { v4 as uuidv4 } from 'uuid';
 
     let games: {game_id: string, host_name: string}[] = [];
 
@@ -26,7 +30,6 @@
         lobby_socket.on('connect',() => {
             lobby_socket.emit('get_games');
             lobby_socket.on('get_games',(message) => {
-                console.log(222)
                 games = message
             })
         })

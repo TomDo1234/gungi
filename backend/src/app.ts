@@ -25,7 +25,7 @@ const rooms: Record<string,{previous_game_state: null | GameState,players: Playe
 
 lobby_io.on('connection',(socket: Socket) => {
   socket.join('the_lobby');
-  socket.on('get_games', (socket: Socket) => {
+  socket.on('get_games', () => {
     const open_rooms = [];
     for (const [game_id,room] of Object.entries(rooms)) {
       const players = Object.values(room.players);
@@ -33,7 +33,7 @@ lobby_io.on('connection',(socket: Socket) => {
         open_rooms.push({game_id, host_name: players?.[0]?.name})
       }
     }
-    socket.to('the_lobby').emit('get_games',open_rooms)
+    lobby_io.to('the_lobby').emit('get_games',open_rooms)
   })
 })
 
@@ -45,6 +45,7 @@ game_io.on('connection', (socket: Socket) => {
       rooms[game_id] = {previous_game_state: null, players: {}};
     }
     if (token in rooms[game_id].players) {
+      socket.emit('get_token',{ token: null })
       return;
     }
     const new_token = generate_token();
