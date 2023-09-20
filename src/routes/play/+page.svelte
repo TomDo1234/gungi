@@ -76,13 +76,9 @@
 		socket.on('connect',() => {
 			socket.emit('send_token',{token: access_token,game_id});
 	
-			if (access_token) {
-				socket.emit('join_game',{ token: access_token,game_id })
-			}
-	
 			socket.on('get_token',(message) => {
 				localStorage.setItem('gungi_token',message.token);
-				access_token = message.token
+				access_token = message.token ?? access_token
 				socket.emit('join_game',{ token: access_token,game_id })
 			})
 			
