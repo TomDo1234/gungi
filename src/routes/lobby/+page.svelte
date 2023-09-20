@@ -29,6 +29,7 @@
     onMount(() => {
         lobby_socket.on('connect',() => {
             lobby_socket.emit('get_games');
+            setInterval(() => {lobby_socket.emit('get_games')},1500);
             lobby_socket.on('get_games',(message) => {
                 games = message
             })
