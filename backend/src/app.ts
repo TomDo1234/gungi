@@ -69,7 +69,7 @@ game_io.on('connection', (socket: Socket) => {
       return;
     }
     const player_list = Object.keys(players);
-    const color = (player_list.length > 1 && player_list[0] !== message.token) ? 'black' : 'white';
+    const color = (player_list.length > 0 && player_list[0] !== message.token) ? 'black' : 'white';
     players[message.token] = {player_color: color, name: null,ready: false};
     game_io.to(message.game_id).emit("joined_room",{player_data: players[message.token] , socket_id: socket.id});
   })

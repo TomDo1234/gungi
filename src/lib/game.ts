@@ -1,4 +1,4 @@
-import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action-gungi";
+import { SHADOW_ITEM_MARKER_PROPERTY_NAME, TRIGGERS } from "svelte-dnd-action";
 import type { BoardState, Piece } from "./pieces";
 
 export type PlayerData = {
@@ -8,9 +8,9 @@ export type PlayerData = {
 }
 
 let shouldIgnoreDndEvents = false;
-export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Item[] {
+export function handleStockpileDnDConsider(e: CustomEvent, data: Item[]): Piece[] {
     const { trigger, id } = e.detail.info;
-    let items = data;
+    let items = data as Piece[];
     if (trigger === TRIGGERS.DRAG_STARTED) {
         const idx = items.findIndex((item) => item.id === id);
         const newId = `${id}_copy_${Math.round(Math.random() * 100000)}`;
