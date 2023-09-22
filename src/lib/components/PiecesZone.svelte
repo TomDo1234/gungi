@@ -70,6 +70,7 @@
 					items: player.piece_data,
 					dropFromOthersDisabled: true,
 					dropTargetClasses: ['!outline-none'],
+					flipDurationMs: 0,
 					dragDisabled:
 						i === 1 || army_count(board_state, player.color) >= 26 || !can_stack(i, stack_turn,players_ready)
 				}}
@@ -160,7 +161,7 @@
 
 	function handleConsider(e: CustomEvent, player_number: number) {
 		let updated_player_data = handleStockpileDnDConsider(e, player_data[player_number].piece_data);
-		const { items: detailItems, info }: { items: Item[]; info: DndEventInfo } = e.detail;
+		const { items: detailItems, info }: { items: Piece[]; info: DndEventInfo } = e.detail;
 		const dragged_item_index = detailItems.findIndex(
 			(item) => item.id === 'id:dnd-shadow-placeholder-0000'
 		);
@@ -184,8 +185,7 @@
 			const dragged_item_index = detailItems.findIndex(
 				(item) => item.id === currently_dragged_stockpile_piece?.id
 			);
-			const player_piece_data = player_data[0].piece_data;
-			player_piece_data[dragged_item_index].amount += 1;
+			player_data[0].piece_data[dragged_item_index].amount += 1;
 		}
 
 		currently_dragged_stockpile_piece = null;
