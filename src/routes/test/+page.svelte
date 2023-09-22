@@ -21,22 +21,24 @@
 			</div>
 		{/each}
 	</div>
-	<PiecesZone tower_details={[]} bind:currently_dragged_stockpile_piece stack_turn={0} turn={0} board_state={[]} />
+	<PiecesZone client_player_color="white" other_player_ready={false} player_ready={false} players_ready={false} game_id={null} player_data={[]} socket={socket}
+	 tower_details={[]} bind:currently_dragged_stockpile_piece stack_turn={0} turn={0} board_state={[]} />
 </div>
 
 <script lang="ts">
 	import PiecesZone from './../../lib/components/PiecesZone.svelte';
-	import { dndzone } from 'svelte-dnd-action-gungi';
+	import { dndzone } from 'svelte-dnd-action';
 
 	import Tile from './Tile.svelte';
 	import Square from './Square.svelte';
 	import { handleStockpileDnDConsider } from '$lib/game';
 	import type { Piece } from '$lib/pieces';
+	import { io } from 'socket.io-client';
 
 	let idx = 0;
 	let currently_dragged_stockpile_piece: Piece | null = null;
-
-	let items = [
+	const socket = io();
+	let items: Piece[] = [
 		{
 			id: 1,
 			amount: 4,
@@ -144,6 +146,7 @@
 
 	$: options = {
 		items,
+		flipDurationMs: 0,
 		morphDisabled: true
 	};
 </script>

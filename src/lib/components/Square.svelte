@@ -21,7 +21,7 @@
 </div>
 
 <script lang="ts">
-	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
+	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action';
 	import type { Piece } from '$lib/pieces';
 	import Tile from '$lib/components/Tile.svelte';
 	import { createEventDispatcher } from 'svelte';
@@ -68,6 +68,7 @@
 	$: options = {
 		items,
 		morphDisabled: true,
+		flipDurationMs: 0,
 		dropFromOthersDisabled: (items.length >= 3 && items[0].color === client_player_color ) || !square_is_valid_move,
 		dropTargetClasses: ['border-purple-600'],
 		dropTargetStyle: {},

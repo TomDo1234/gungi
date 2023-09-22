@@ -20,11 +20,12 @@
 </div>
 
 <script lang="ts">
-	import { dndzone, type DndEventInfo } from 'svelte-dnd-action-gungi';
+	import { dndzone, type DndEventInfo } from 'svelte-dnd-action';
 
 	import Tile from '$lib/components/Tile.svelte';
 	import { createEventDispatcher } from 'svelte';
-	let items: Item[] = [];
+	import type { Piece } from '$lib/pieces';
+	let items: Piece[] = [];
 	const dispatch = createEventDispatcher();
 
 	function emitStackInfo() {
@@ -32,7 +33,7 @@
 	}
 	export let square_number: number;
 	function handleDnd(e: CustomEvent) {
-		const { items: detailItems }: { items: Item[]; info: DndEventInfo } = e.detail;
+		const { items: detailItems }: { items: Piece[]; info: DndEventInfo } = e.detail;
 		const dragged_item_index = detailItems.findIndex(
 			(item) => item.id === 'id:dnd-shadow-placeholder-0000'
 		);
@@ -48,6 +49,7 @@
 	$: options = {
 		items,
 		morphDisabled: true,
+		flipDurationMs: 0,
 		dropFromOthersDisabled: items.length >= 3,
 		dropTargetClasses: ['!outline-none']
 	};

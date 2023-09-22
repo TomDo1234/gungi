@@ -104,7 +104,7 @@
 </div>
 
 <script lang="ts">
-	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action-gungi';
+	import { dndzone, type DndEventInfo, TRIGGERS } from 'svelte-dnd-action';
 	import { handleStockpileDnDConsider, type PlayerData } from '$lib/game';
 	import type { Piece,BoardState } from '$lib/pieces';
 	import type { Socket } from 'socket.io-client';
