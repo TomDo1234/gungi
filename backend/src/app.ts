@@ -60,7 +60,13 @@ game_io.on('connection', (socket: Socket) => {
     const { players,previous_game_state: ref_previous_game_state } = rooms[message.game_id];
     if (message.token in players) {
       const previous_game_state = structuredClone(ref_previous_game_state);
-      const flip = (previous_game_state?.stack_turn ?? 0) % 2 === (players[message.token].player_color === 'white' ? 1 : 0)
+      let flip: boolean;
+      if ((previous_game_state?.turn ?? 0) > 1) {
+        flip = (previous_game_state?.turn ?? 0) % 2 === (players[message.token].player_color === 'white' ? 0 : 1)
+      }
+      else {
+        flip = (previous_game_state?.stack_turn ?? 0) % 2 === (players[message.token].player_color === 'white' ? 1 : 0)
+      }
       if (flip && previous_game_state) {
         previous_game_state.board_state = flip_board(previous_game_state?.board_state)
         previous_game_state.player_data.reverse()

@@ -69,7 +69,7 @@
 		items,
 		morphDisabled: true,
 		flipDurationMs: 0,
-		dropFromOthersDisabled: (items.length >= 3 && items[0].color === client_player_color ) || !square_is_valid_move,
+		dropFromOthersDisabled: (items.length >= 3 && items[0].color === client_player_color ) || !square_is_valid_move || items[0]?.display_name === "Marshal (King)",
 		dropTargetClasses: ['border-purple-600'],
 		dropTargetStyle: {},
 		dragDisabled: !is_client_turn || !players_ready || items.at(0)?.color !== client_player_color

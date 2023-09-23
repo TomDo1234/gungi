@@ -95,6 +95,8 @@
 						stack_turn = message.previous_game_state?.stack_turn ?? 1
 						board_state = message.previous_game_state?.board_state ?? board_state
 						player_data = message.previous_game_state?.player_data ?? player_data
+						player_ready = message.previous_game_state?.player_ready ?? player_ready
+						other_player_ready = message.previous_game_state?.other_player_ready ?? other_player_ready
 					}
 				}
 			})
@@ -184,7 +186,7 @@
 		turn += players_ready ? 1 : 0;
 		board_state = board_state // to rerender
 		playSound();
-		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id,player_data});
+		socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id,player_data,player_ready,other_player_ready});
 		show_take_capture_modal = false;
 	}
 
@@ -209,7 +211,7 @@
 				stack_turn += 1;
 				turn += players_ready ? 1 : 0;
 				playSound();
-				socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id,player_data});
+				socket.emit("send_data_after_turn",{board_state, turn, stack_turn, game_id,player_data,player_ready,other_player_ready});
 			}
 		} 
 		else if (currently_dragged_piece_position) {
