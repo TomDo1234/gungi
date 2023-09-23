@@ -21,18 +21,15 @@ export function generate_token() {
 }
 
 export function flip_board(board: BoardState): BoardState {
-    const numRows = 9;
-    const numCols = 9;
-
     const flippedBoard = [];
 
-    for (let i = numRows - 1; i >= 0; i--) {
+    for (let i = 8; i >= 0; i--) {
         const newRow = [];
-        for (let j = numCols - 1; j >= 0; j--) {
+        for (let j = 8; j >= 0; j--) {
             const square = board[i][j]
             square.id = (8 - i) * 9 + 8 - j
-            if (square.pieces.length > 0) {
-                square.pieces[0].position = 80 - (square.pieces[0]?.position ?? 0)
+            for (let k = 0; k < square.pieces.length ; k++) {
+                square.pieces[k].position = (8 - i) * 9 + 8 - j
             }
             newRow.push(square);
         }
